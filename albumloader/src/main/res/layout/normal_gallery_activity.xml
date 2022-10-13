@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="model"
+            type="com.lee.album.activity.normal.NormalGalleryViewModel" />
+
+        <import type="android.view.View" />
+    </data>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/color_323232">
+
+
+        <LinearLayout
+
+            android:id="@+id/title_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <RelativeLayout
+
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/color_3C3B39">
+
+
+                <RelativeLayout
+                    android:id="@+id/center_bg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/corner_common_100_f2f2f2_shape"
+                    android:onClick="@{()->model.titleClick()}"
+                    android:paddingLeft="11dp"
+                    android:paddingTop="5dp"
+                    android:paddingRight="11dp"
+                    android:paddingBottom="5dp">
+
+                    <TextView
+                        android:id="@+id/tv_content"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:ellipsize="end"
+                        android:maxEms="7"
+                        android:singleLine="true"
+                        android:text="@{model.tvContent}"
+                        android:textColor="@color/white"
+                        android:textSize="14sp" />
+
+                    <ImageView
+
+                        android:id="@+id/iv_center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="5dp"
+                        android:layout_toRightOf="@+id/tv_content"
+                        android:background="@drawable/gallery_list_status"
+                        android:visibility="visible"
+                        bind:bindIvSelected="@{model.ivCenter}" />
+
+                </RelativeLayout>
+
+                <FrameLayout
+                    android:id="@+id/iv_back_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="5dp"
+                    android:padding="10dp">
+
+
+                </FrameLayout>
+
+
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+
+            android:layout_above="@+id/bottom"
+            android:id="@+id/recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/title_layout"
+            bind:bindRcvAdapter="@{model.adapter}"
+            bind:bindRcvItemDecoration="@{model.decoration}"
+            bind:bindRcvManager="@{model.manager}"
+
+            />
+
+        <RelativeLayout
+            android:id="@+id/classify_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/title_layout"
+            android:visibility="@{model.classifyLayout?View.VISIBLE:View.GONE}">
+
+
+            <RelativeLayout
+
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/alpha_60_black"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <com.lee.album.widget.MaxHeightRecyclerView
+                android:id="@+id/classify_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:maxHeightRcvHeight="360dp"
+                bind:bindRcvAdapter="@{model.titleAdapter}"
+                bind:bindRcvManager="@{model.titleManager}" />
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/bottom"
+            android:background="@color/color_181818"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_alignParentBottom="true">
+
+
+
+        </RelativeLayout>
+    </RelativeLayout>
+
+</layout>
