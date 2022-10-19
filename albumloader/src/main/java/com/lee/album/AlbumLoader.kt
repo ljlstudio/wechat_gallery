@@ -15,8 +15,8 @@ import android.database.Cursor
 import android.provider.MediaStore
 import android.graphics.BitmapFactory
 import android.os.Handler
-import android.util.Log
 import androidx.loader.app.LoaderManager
+import com.lee.album.inter.LoaderStatus
 import com.lee.album.utils.Utils
 import kotlinx.coroutines.*
 import java.io.File
@@ -42,6 +42,12 @@ open class AlbumLoader {
     private var mAlbumDataScanner: AlbumDataScanner? = null
     private var selectionArgsName: String? = null
     private var launch: Job? = null
+    private var loaderStatus: Int = LoaderStatus.LOADER_IDE
+
+
+    fun getLoaderStatus(): Int {
+        return loaderStatus
+    }
 
     companion object {
         val TAG: String = AlbumLoader::class.java.simpleName
@@ -62,6 +68,63 @@ open class AlbumLoader {
             BitmapFactory.decodeFile(filePath, options)
             return options!!.outWidth != -1
         }
+
+        /**
+         * 根据类型获取查询条件
+         */
+        private fun getCursor(
+            selectionArgsName: String?,
+            id: String,
+            context: Context?,
+            loadType: Int
+        ): Cursor? {
+
+            val mImageUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+            val projImage = arrayOf(
+                MediaStore.Images.Media._ID,
+                MediaStore.Images.Media.DATA,
+                MediaStore.Images.Media.SIZE,
+                MediaStore.Images.Media.WIDTH,
+                MediaStore.Images.Media.HEIGHT,
+                MediaStore.Images.Media.DISPLAY_NAME
+            )
+            var selectionArgs = arrayOf(selectionArgsName)
+            val mCursor: Cursor?
+            if (selectionArgsName == "0") {
+                selectionArgs = arrayOf(id)
+                val selection1 = MediaStore.Images.Media.BUCKET_ID + "=?"
+                mCursor = context?.contentResolver?.query(
+                    mImageUri,
+                    projImage,
+                    selection1,
+                    selectionArgs,
+                    MediaStore.Images.Media.DATE_MODIFIED + " desc"
+                )
+            } else {
+                //加载全部图片
+                val selection = MediaStore.Images.Media.BUCKET_DISPLAY_NAME + "=?"
+                mCursor = if (loadType == LoaderType.LOADER_ALL) {
+                    context?.contentResolver?.query(
+                        mImageUri,
+                        projImage,
+                        MediaStore.Images.Media.MIME_TYPE + "=? or " + MediaStore.Images.Media.MIME_TYPE + "=?",
+                        arrayOf("image/jpeg", "image/png"),
+                        MediaStore.Images.Media.DATE_MODIFIED + " desc"
+                    )
+                } else {
+                    context?.contentResolver?.query(
+                        mImageUri,
+                        projImage,
+                        selection,
+                        selectionArgs,
+                        MediaStore.Images.Media.DATE_MODIFIED + " desc"
+                    )
+                }
+            }
+
+            return mCursor
+        }
+
     }
 
     init {
@@ -130,20 +193,19 @@ open class AlbumLoader {
         loadListData(context, "", LoaderType.LOADER_ALL, "")
     }
 
-    private fun loadListMore(
-        context: Context?,
-        selectionArgsName: String?,
-        id: String,
-        loadType: Int
-    ) {
+    /**
+     * 加载更多
+     */
+    fun loadListMore() {
         if (allData.size < count) {
             loadListData(context, selectionArgsName, loadType, id)
         }
     }
 
 
-
-
+    private var context: Context? = null
+    private var loadType: Int = LoaderType.LOADER_ALL
+    private var id: String = ""
 
     /**
      * 加载列表数据
@@ -161,62 +223,25 @@ open class AlbumLoader {
         loadType: Int,
         id: String
     ) {
-        Log.i(TAG, "selectionArgsName is$selectionArgsName")
+
+
         if (selectionArgsName != null && selectionArgsName != this.selectionArgsName) {
             albumLoaderBuilder.callBack?.clearData()
             allData.clear()
             isRunning = true
         }
         this.selectionArgsName = selectionArgsName
+        this.context = context
+        this.loadType = loadType
+        this.id = id
         album.clear()
         latelyList.clear()
         allList.clear()
 
-
+        loaderStatus = LoaderStatus.LOADING
         launch = GlobalScope.launch(Dispatchers.IO) {
 
-            val mImageUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-            val projImage = arrayOf(
-                MediaStore.Images.Media._ID,
-                MediaStore.Images.Media.DATA,
-                MediaStore.Images.Media.SIZE,
-                MediaStore.Images.Media.WIDTH,
-                MediaStore.Images.Media.HEIGHT,
-                MediaStore.Images.Media.DISPLAY_NAME
-            )
-            var selectionArgs = arrayOf(selectionArgsName)
-            val mCursor: Cursor?
-            if (selectionArgsName == "0") {
-                selectionArgs = arrayOf(id)
-                val selection1 = MediaStore.Images.Media.BUCKET_ID + "=?"
-                mCursor = context?.contentResolver?.query(
-                    mImageUri,
-                    projImage,
-                    selection1,
-                    selectionArgs,
-                    MediaStore.Images.Media.DATE_MODIFIED + " desc"
-                )
-            } else {
-                //加载全部图片
-                val selection = MediaStore.Images.Media.BUCKET_DISPLAY_NAME + "=?"
-                mCursor = if (loadType == LoaderType.LOADER_ALL) {
-                    context?.contentResolver?.query(
-                        mImageUri,
-                        projImage,
-                        MediaStore.Images.Media.MIME_TYPE + "=? or " + MediaStore.Images.Media.MIME_TYPE + "=?",
-                        arrayOf("image/jpeg", "image/png"),
-                        MediaStore.Images.Media.DATE_MODIFIED + " desc"
-                    )
-                } else {
-                    context?.contentResolver?.query(
-                        mImageUri,
-                        projImage,
-                        selection,
-                        selectionArgs,
-                        MediaStore.Images.Media.DATE_MODIFIED + " desc"
-                    )
-                }
-            }
+            val mCursor = getCursor(selectionArgsName, id, context, loadType)
             var size = 0
             var parentFile: File? = null
             if (mCursor != null) {
@@ -300,11 +325,7 @@ open class AlbumLoader {
                 withContext(Dispatchers.Main) {
 
                     setData(
-                        allList,
-                        context,
-                        selectionArgsName,
-                        id,
-                        loadType
+                        allList
                     )
 
                 }
@@ -323,20 +344,17 @@ open class AlbumLoader {
      * @param loadType
      */
     private fun setData(
-        galleryInfoEntityList: List<GalleryInfoEntity>?,
-        context: Context?,
-        selectionArgsName: String?,
-        id: String,
-        loadType: Int
+        galleryInfoEntityList: List<GalleryInfoEntity>?
     ) {
         synchronized(lock) {
+            loaderStatus = LoaderStatus.LOADER_IDE
             allData.addAll(galleryInfoEntityList!!)
             if (isRunning) {
                 albumLoaderBuilder.callBack?.loadListDataSuccess(galleryInfoEntityList, allData)
             }
-            if (!albumLoaderBuilder.isShouldLoadPaging && isRunning) {
-                loadListMore(context, selectionArgsName, id, loadType)
-            }
+//            if (!albumLoaderBuilder.isShouldLoadPaging && isRunning) {
+//                loadListMore(context, selectionArgsName, id, loadType)
+//            }
         }
     }
 

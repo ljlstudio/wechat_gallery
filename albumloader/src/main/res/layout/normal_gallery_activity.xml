@@ -89,52 +89,57 @@
 
         </LinearLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
 
-            android:layout_above="@+id/bottom"
-            android:id="@+id/recycler"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/title_layout"
-            bind:bindRcvAdapter="@{model.adapter}"
-            bind:bindRcvItemDecoration="@{model.decoration}"
-            bind:bindRcvManager="@{model.manager}"
-
-            />
-
-        <RelativeLayout
+        <com.lee.album.widget.VerticalDrawerLayout
             android:id="@+id/classify_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_above="@+id/bottom"
             android:layout_below="@+id/title_layout"
-            android:visibility="@{model.classifyLayout?View.VISIBLE:View.GONE}">
-
+            bind:bindDrawerListener="@{model.drawerListener}">
 
             <RelativeLayout
 
+                android:id="@+id/layout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/alpha_60_black"
-                android:clickable="true"
-                android:focusable="true" />
+                android:layout_height="match_parent">
+
+                <androidx.recyclerview.widget.RecyclerView
+
+
+                    android:id="@+id/recycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clickable="true"
+
+                    bind:bindRcvListener="@{model.scrollListener}"
+                    bind:bindRcvAdapter="@{model.adapter}"
+                    bind:bindRcvItemDecoration="@{model.decoration}"
+                    bind:bindRcvManager="@{model.manager}"
+
+                    />
+
+            </RelativeLayout>
 
             <com.lee.album.widget.MaxHeightRecyclerView
                 android:id="@+id/classify_recycler"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                app:maxHeightRcvHeight="360dp"
+                android:layout_gravity="top"
+                android:layout_marginBottom="20dp"
+                app:maxHeightRcvHeight="560dp"
                 bind:bindRcvAdapter="@{model.titleAdapter}"
                 bind:bindRcvManager="@{model.titleManager}" />
-        </RelativeLayout>
+
+        </com.lee.album.widget.VerticalDrawerLayout>
 
 
         <RelativeLayout
             android:id="@+id/bottom"
-            android:background="@color/color_181818"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:layout_alignParentBottom="true">
-
+            android:layout_alignParentBottom="true"
+            android:background="@color/color_181818">
 
 
         </RelativeLayout>

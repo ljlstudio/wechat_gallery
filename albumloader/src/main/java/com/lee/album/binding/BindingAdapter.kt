@@ -15,6 +15,8 @@ import com.bumptech.glide.Glide
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.google.android.material.imageview.ShapeableImageView
+import com.lee.album.widget.AutoTranslateView
+import com.lee.album.widget.VerticalDrawerLayout
 import java.util.*
 
 object BindingAdapter {
@@ -139,6 +141,20 @@ object BindingAdapter {
     @JvmStatic
     fun setImageViewSelected(imageView: ImageView, boolean: Boolean) {
         imageView.isSelected = boolean
+    }
+
+
+    @BindingAdapter("bindRLVisible")
+    @JvmStatic
+    fun setRelativeVisible(relativeLayout: VerticalDrawerLayout, boolean: Boolean) {
+
+
+    }
+
+    @BindingAdapter("bindDrawerListener")
+    @JvmStatic
+    fun setDrawerListener(verticalDrawerLayout: VerticalDrawerLayout,listener: VerticalDrawerLayout.VerticalDrawerListener){
+        verticalDrawerLayout.setDrawerListener(listener)
     }
 
 }

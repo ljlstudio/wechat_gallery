@@ -35,6 +35,7 @@ class AlbumDataLoader : CursorLoader {
         order: String
     ) : super(context!!, QUERY_URI, PROJECTION_Q, selection, selectionArgs, order)
 
+    @SuppressLint("Range")
     override fun loadInBackground(): Cursor? {
         var allAlbum: MatrixCursor? = null
         var supportAlbums: MatrixCursor? = null
@@ -85,8 +86,8 @@ class AlbumDataLoader : CursorLoader {
                         if (count >= 1) {
                             supportAlbums.addRow(
                                 arrayOf(
-                                    java.lang.Long.toString(fileId),
-                                    java.lang.Long.toString(bucketId),
+                                    fileId.toString(),
+                                    bucketId.toString(),
                                     bucketDisplayName,
                                     mimeType,
                                     uri.toString(), count.toString()
@@ -189,19 +190,23 @@ class AlbumDataLoader : CursorLoader {
             return AlbumDataLoader(context, SELECTION_ALL_Q, SELECTION_ALL_ARGS)
         }
 
+        @SuppressLint("Range")
         private fun getUri(cursor: Cursor): Uri {
             val id = cursor.getLong(cursor.getColumnIndex(MediaStore.Files.FileColumns._ID))
             val mimeType = cursor.getString(
                 cursor.getColumnIndex(MediaStore.MediaColumns.MIME_TYPE)
             )
-            val contentUri: Uri
-            contentUri = if (MimeType.isImage(mimeType)) {
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-            } else if (MimeType.isVideo(mimeType)) {
-                MediaStore.Video.Media.EXTERNAL_CONTENT_URI
-            } else {
-                // unknown
-                MediaStore.Files.getContentUri("external")
+            val contentUri: Uri = when {
+                MimeType.isImage(mimeType) -> {
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                }
+                MimeType.isVideo(mimeType) -> {
+                    MediaStore.Video.Media.EXTERNAL_CONTENT_URI
+                }
+                else -> {
+                    // unknown
+                    MediaStore.Files.getContentUri("external")
+                }
             }
             return ContentUris.withAppendedId(contentUri, id)
         }

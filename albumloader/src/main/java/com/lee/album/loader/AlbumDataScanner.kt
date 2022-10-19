@@ -3,12 +3,15 @@ package com.lee.album.loader
 import android.content.Context
 import android.database.Cursor
 import android.os.Bundle
+import android.os.Looper
+import android.util.Log
 import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
 import com.lee.album.entity.AlbumData
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import java.util.ArrayList
 
@@ -44,17 +47,17 @@ class AlbumDataScanner(
 
 
         //第一种写法
-        job = GlobalScope.launch(Dispatchers.IO) {
+        job = GlobalScope.launch(Dispatchers.Main) {
 
             flow {
                 emit(data)
             }.map {
                 scanAllAlbumData(it)
-            }.collect {
+            }.flowOn(Dispatchers.IO).collect {
+                Log.i("THREAD", "" + (Thread.currentThread() == Looper.getMainLooper().thread))
                 mAlbumDataReceiver?.onAlbumDataObserve(it)
             }
         }
-
 
 
 //        //第二种写法，不在协程内，不可取消
