@@ -111,8 +111,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:clickable="true"
-
-                    bind:bindRcvListener="@{model.scrollListener}"
                     bind:bindRcvAdapter="@{model.adapter}"
                     bind:bindRcvItemDecoration="@{model.decoration}"
                     bind:bindRcvManager="@{model.manager}"

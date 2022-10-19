@@ -352,9 +352,9 @@ open class AlbumLoader {
             if (isRunning) {
                 albumLoaderBuilder.callBack?.loadListDataSuccess(galleryInfoEntityList, allData)
             }
-//            if (!albumLoaderBuilder.isShouldLoadPaging && isRunning) {
-//                loadListMore(context, selectionArgsName, id, loadType)
-//            }
+            if (!albumLoaderBuilder.isShouldLoadPaging && isRunning) {
+                loadListMore()
+            }
         }
     }
 

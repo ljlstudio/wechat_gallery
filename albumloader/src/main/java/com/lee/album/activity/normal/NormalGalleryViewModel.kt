@@ -83,7 +83,7 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
     override fun onCreate() {
         super.onCreate()
 
-        scrollListener?.set(scrollerListener)
+//        scrollListener?.set(scrollerListener)
         galleryParam = GalleryParam.instance
         loader = AlbumLoader()
         loader?.setAlbumLoaderBuilder(
@@ -241,34 +241,34 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
     }
 
 
-    private var scrollerListener: RecyclerView.OnScrollListener =
-        object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-
-
-                if (newState == RecyclerView.SCROLL_STATE_DRAGGING && loader?.getLoaderStatus() != LoaderStatus.LOADING) {
-
-                    if (currentPageSize!! >= pageSize!!) {
-                        loader?.loadListMore()
-                        //加载
-                    } else {
-                        //图片已经加载完毕
-                    }
-                }
-
-
-            }
-
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-
-//                val findFirstVisibleItemPosition = manager?.get()?.findFirstVisibleItemPosition()
-//                val findLastVisibleItemPosition =
-//                    manager?.get()?.findLastVisibleItemPosition()?.minus(15)
-//                lastVisiblePosition = findLastVisibleItemPosition
-
-            }
-        }
+//    private var scrollerListener: RecyclerView.OnScrollListener =
+//        object : RecyclerView.OnScrollListener() {
+//            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+//                super.onScrollStateChanged(recyclerView, newState)
+//
+//
+//                if (newState == RecyclerView.SCROLL_STATE_DRAGGING && loader?.getLoaderStatus() != LoaderStatus.LOADING) {
+//
+//                    if (currentPageSize!! >= pageSize!!) {
+//                        loader?.loadListMore()
+//                        //加载
+//                    } else {
+//                        //图片已经加载完毕
+//                    }
+//                }
+//
+//
+//            }
+//
+//            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+//                super.onScrolled(recyclerView, dx, dy)
+//
+////                val findFirstVisibleItemPosition = manager?.get()?.findFirstVisibleItemPosition()
+////                val findLastVisibleItemPosition =
+////                    manager?.get()?.findLastVisibleItemPosition()?.minus(15)
+////                lastVisiblePosition = findLastVisibleItemPosition
+//
+//            }
+//        }
 
 }
