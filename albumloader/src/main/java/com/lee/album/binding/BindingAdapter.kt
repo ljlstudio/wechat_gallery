@@ -16,6 +16,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.google.android.material.imageview.ShapeableImageView
 import com.lee.album.widget.AutoTranslateView
+import com.lee.album.widget.RotateImageView
 import com.lee.album.widget.VerticalDrawerLayout
 import java.util.*
 
@@ -153,8 +154,17 @@ object BindingAdapter {
 
     @BindingAdapter("bindDrawerListener")
     @JvmStatic
-    fun setDrawerListener(verticalDrawerLayout: VerticalDrawerLayout,listener: VerticalDrawerLayout.VerticalDrawerListener){
+    fun setDrawerListener(
+        verticalDrawerLayout: VerticalDrawerLayout,
+        listener: VerticalDrawerLayout.VerticalDrawerListener
+    ) {
         verticalDrawerLayout.setDrawerListener(listener)
     }
 
+
+    @BindingAdapter("bindRotateImg")
+    @JvmStatic
+    fun setRotateImageViewRotate(rotateImageView: RotateImageView, boolean: Boolean) {
+        rotateImageView.rotate(boolean)
+    }
 }

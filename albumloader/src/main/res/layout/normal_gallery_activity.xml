@@ -59,20 +59,20 @@
                         android:maxEms="7"
                         android:singleLine="true"
                         android:text="@{model.tvContent}"
-                        android:textColor="@color/white"
-                        android:textSize="14sp" />
+                        android:textColor="@color/color_DAD8DC"
+                        android:textSize="13sp" />
 
-                    <ImageView
+                    <com.lee.album.widget.RotateImageView
 
                         android:id="@+id/iv_center"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="5dp"
                         android:layout_toRightOf="@+id/tv_content"
-                        android:background="@drawable/gallery_list_status"
+                        android:src="@drawable/down_c"
                         android:visibility="visible"
-                        bind:bindIvSelected="@{model.ivCenter}" />
+                        bind:bindRotateImg="@{model.ivCenter}" />
 
                 </RelativeLayout>
 
