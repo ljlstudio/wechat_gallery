@@ -5,13 +5,13 @@
 
         <variable
             name="model"
-            type="com.lee.album.activity.preview.PicturePreViewModel" />
+            type="com.lee.album.activity.normal.NormalGalleryViewModel" />
     </data>
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:clipChildren="false"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:clipChildren="false">
 
 
         <com.github.chrisbanes.photoview.PhotoView
@@ -19,8 +19,7 @@
 
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-          />
+            android:layout_centerInParent="true" />
 
     </RelativeLayout>
 

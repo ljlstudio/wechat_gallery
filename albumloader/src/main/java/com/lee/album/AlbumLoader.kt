@@ -196,7 +196,7 @@ open class AlbumLoader {
     /**
      * 加载更多
      */
-    fun loadListMore() {
+    private fun loadListMore() {
         if (allData.size < count) {
             loadListData(context, selectionArgsName, loadType, id)
         }
@@ -333,6 +333,40 @@ open class AlbumLoader {
 
         }
     }
+
+    /**
+     * 加载左边的
+     */
+    suspend fun loadLastPicture(
+        context: Context?,
+        selectionArgsName: String?,
+        loadType: Int,
+        id: String
+    ) = withContext(Dispatchers.IO) {
+
+    }
+
+    /**
+     * 加载右边
+     */
+    suspend fun loadNextPicture(
+        context: Context?,
+        selectionArgsName: String?,
+        loadType: Int,
+        id: String
+    ) = withContext(Dispatchers.IO) {
+
+
+        val mCursor = getCursor(selectionArgsName, id, context, loadType)
+
+        if (mCursor != null) {
+            val count = mCursor.count
+
+
+        }
+
+    }
+
 
     /**
      * 设置数据

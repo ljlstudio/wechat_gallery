@@ -23,8 +23,8 @@ class PicturePreViewModel(application: Application) : BaseViewModel(application)
     }
 
     var pageCurrentItem: ObservableField<Int>? = ObservableField(0)
-    var adapter: ObservableField<ViewPagerAdapter>? =
-        ObservableField(ViewPagerAdapter(this))
+//    var adapter: ObservableField<ViewPagerAdapter>? =
+//        ObservableField(ViewPagerAdapter(this))
     var pageListener: ObservableField<ViewPager2.OnPageChangeCallback>? =
         ObservableField(PageListener())
 
@@ -56,6 +56,8 @@ class PicturePreViewModel(application: Application) : BaseViewModel(application)
 
 
     fun initData() {
+
+
         galleryParam = GalleryParam.instance
         loader = AlbumLoader()
         loader?.setAlbumLoaderBuilder(
@@ -92,8 +94,9 @@ class PicturePreViewModel(application: Application) : BaseViewModel(application)
     ) {
         Log.i(TAG, "the data size" + currentAllData?.size)
         pageData?.let {
-            adapter?.get()?.addData(pageData as MutableList<GalleryInfoEntity>)
+//            adapter?.get()?.addData(pageData as MutableList<GalleryInfoEntity>)
 //            pageCurrentItem?.set(position)
+
         }
     }
 

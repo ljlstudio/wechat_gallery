@@ -6,6 +6,8 @@ import android.util.Log
 import android.view.View
 import androidx.databinding.ObservableField
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.kt.ktmvvm.basic.BaseViewModel
 import com.kt.ktmvvm.basic.SingleLiveEvent
@@ -16,6 +18,7 @@ import com.lee.album.R
 import com.lee.album.activity.preview.PicturePreViewActivity
 import com.lee.album.adapter.GalleryClassifyAdapter
 import com.lee.album.adapter.GalleryItemAdapter
+import com.lee.album.adapter.ViewPagerAdapter
 import com.lee.album.entity.AlbumData
 import com.lee.album.entity.GalleryInfoEntity
 import com.lee.album.inter.LoaderDataCallBack
@@ -25,6 +28,8 @@ import com.lee.album.widget.GalleryGridLayoutManager
 import com.lee.album.widget.GalleryLayoutManager
 import com.lee.album.widget.GridSpaceItemDecoration
 import com.lee.album.widget.VerticalDrawerLayout
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 
 
 class NormalGalleryViewModel(application: Application) : BaseViewModel(application),
@@ -76,13 +81,18 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
     var scrollListener: ObservableField<RecyclerView.OnScrollListener>? =
         ObservableField()
 
+    var pageCurrentItem: ObservableField<Int>? = ObservableField(0)
+    var previewAdapter: ObservableField<ViewPagerAdapter>? =
+        ObservableField(ViewPagerAdapter(this))
+
+
     private var galleryParam: GalleryParam? = null
     private var pageSize: Int? = 0
     private var currentPageSize: Int? = 0
-    private var lastVisiblePosition: Int? = 0;
     override fun onCreate() {
         super.onCreate()
-
+        Log.i(TAG, "on create is" + System.currentTimeMillis())
+        pageCurrentItem?.set(0)
 //        scrollListener?.set(scrollerListener)
         galleryParam = GalleryParam.instance
         loader = AlbumLoader()
@@ -140,6 +150,7 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
 
     }
 
+
     override fun loadListDataSuccess(
         pageData: List<GalleryInfoEntity?>?,
         currentAllData: List<GalleryInfoEntity?>?
@@ -147,8 +158,13 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
 
         pageData?.let {
             currentPageSize = it.size
-            Log.i(TAG, "the data size=" + pageData.size)
+//            Log.i(TAG, "the data size=" + pageData.size)
             adapter?.get()?.addData(pageData as MutableList<GalleryInfoEntity>)
+            previewAdapter?.get()?.addData(pageData as MutableList<GalleryInfoEntity>)
+
+//            dataValue.postValue(pageData as MutableList<GalleryInfoEntity>)
+
+
         } ?: let {
             currentPageSize = 0
         }
@@ -189,6 +205,7 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
             }
             tvContent?.set(data.albumName)
             adapter?.get()?.setNewInstance(null)
+            previewAdapter?.get()?.setNewInstance(null)
             loader?.loadTitleListData(getApplication(), data.albumName, data.id)
         }
 
@@ -240,8 +257,12 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
 
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        Log.i(TAG, "on cleared ")
+    }
 
-//    private var scrollerListener: RecyclerView.OnScrollListener =
+    //    private var scrollerListener: RecyclerView.OnScrollListener =
 //        object : RecyclerView.OnScrollListener() {
 //            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
 //                super.onScrollStateChanged(recyclerView, newState)

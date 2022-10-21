@@ -9,12 +9,13 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.lee.album.R
+import com.lee.album.activity.normal.NormalGalleryViewModel
 import com.lee.album.activity.preview.PicturePreViewModel
 import com.lee.album.databinding.ItemPreviewLayoutBinding
 import com.lee.album.entity.GalleryInfoEntity
 
 
-class ViewPagerAdapter(var model: PicturePreViewModel) :
+class ViewPagerAdapter(var model: NormalGalleryViewModel) :
     BaseQuickAdapter<GalleryInfoEntity, BaseViewHolder>(R.layout.item_preview_layout) {
 
 

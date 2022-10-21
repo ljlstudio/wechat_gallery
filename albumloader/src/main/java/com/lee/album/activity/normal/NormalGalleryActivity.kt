@@ -1,7 +1,9 @@
 package com.lee.album.activity.normal
 
 import android.Manifest
+import android.nfc.Tag
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.widget.RelativeLayout
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -24,9 +26,14 @@ class NormalGalleryActivity : BaseActivity<NormalGalleryActivityBinding, NormalG
         return R.layout.normal_gallery_activity
     }
 
+    companion object {
+        var activity: NormalGalleryActivity? = null
+    }
+
     override fun initParam() {
+        activity = this
         binding?.classifyLayout?.setDrawerLockMode(VerticalDrawerLayout.LOCK_MODE_LOCKED_CLOSED)
-        binding?.classifyLayout?.setDrawerShadow(R.color.alpha_60_black,Gravity.BOTTOM)
+        binding?.classifyLayout?.setDrawerShadow(R.color.alpha_60_black, Gravity.BOTTOM)
     }
 
     override fun initViewObservable() {
@@ -73,6 +80,7 @@ class NormalGalleryActivity : BaseActivity<NormalGalleryActivityBinding, NormalG
                 }
             }
         })
+
     }
 
 
