@@ -257,6 +257,16 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
 
     }
 
+    /**
+     * 选中图片
+     */
+    fun checkPicture(position: Int, galleryInfoEntity: GalleryInfoEntity?) {
+        galleryInfoEntity?.let {
+            galleryInfoEntity.isSelected = !galleryInfoEntity.isSelected
+            adapter?.get()?.notifyItemChanged(position, GalleryItemAdapter.PLAY_LOAD_CHECK)
+        }
+    }
+
     override fun onCleared() {
         super.onCleared()
         Log.i(TAG, "on cleared ")

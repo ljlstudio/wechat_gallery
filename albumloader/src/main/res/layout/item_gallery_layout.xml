@@ -24,27 +24,45 @@
         android:orientation="vertical">
 
         <com.google.android.material.imageview.ShapeableImageView
-            android:onClick="@{()->model.clickPicture(data,position)}"
             android:id="@+id/img"
             android:layout_width="match_parent"
-            android:scaleType="centerCrop"
             android:layout_height="match_parent"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            android:onClick="@{()->model.clickPicture(data,position)}"
+            android:scaleType="centerCrop" />
+
+
+        <FrameLayout
+            android:visibility="invisible"
+            android:id="@+id/check_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/color_60black" />
+
+        <FrameLayout
+            android:onClick="@{()->model.checkPicture(position,data)}"
+            android:padding="5dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/iv_check"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="@drawable/picture_check_status" />
+        </FrameLayout>
+
 
         <FrameLayout
             android:id="@+id/icon_camera"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="gone"
-            android:background="#DCDCDC">
-
+            android:background="#DCDCDC"
+            android:visibility="gone">
 
 
         </FrameLayout>
-
-
-
-
 
 
     </RelativeLayout>

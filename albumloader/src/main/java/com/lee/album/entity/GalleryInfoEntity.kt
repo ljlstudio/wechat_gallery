@@ -24,6 +24,9 @@ class GalleryInfoEntity : Serializable {
     var imgHeight = 0
         private set
 
+
+
+
     fun setImgWidth(imgWidth: Int): GalleryInfoEntity {
         this.imgWidth = imgWidth
         return this

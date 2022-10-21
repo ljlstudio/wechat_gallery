@@ -4,6 +4,7 @@ package com.lee.album.adapter
 import android.annotation.SuppressLint
 import android.content.Context
 import android.view.View
+import android.widget.ImageView
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import com.bumptech.glide.Glide
@@ -51,6 +52,9 @@ class GalleryItemAdapter(
         binding?.data = galleryInfoEntity
         binding?.position = holder.adapterPosition
 
+        holder.setVisible(R.id.check_bg, galleryInfoEntity.isSelected)
+        holder.getView<ImageView>(R.id.iv_check).isSelected = galleryInfoEntity.isSelected
+
         val iv = holder.getView<ShapeableImageView>(R.id.img)
         Glide.with(context)
             .load(galleryInfoEntity.imgPath)
@@ -71,5 +75,28 @@ class GalleryItemAdapter(
     override fun onItemViewHolderCreated(viewHolder: BaseViewHolder, viewType: Int) {
         // 绑定 view
         DataBindingUtil.bind<ViewDataBinding>(viewHolder.itemView)
+    }
+
+
+    override fun onBindViewHolder(
+        holder: BaseViewHolder,
+        position: Int,
+        payloads: MutableList<Any>
+    ) {
+
+        if (payloads.size <= 0) {
+            super.onBindViewHolder(holder, position, payloads)
+        } else {
+            val pay = payloads[0] as String
+            if (pay.isNotEmpty() && pay == PLAY_LOAD_CHECK) {
+                val galleryInfoEntity = data[position]
+                holder.setVisible(R.id.check_bg, galleryInfoEntity.isSelected)
+                holder.getView<ImageView>(R.id.iv_check).isSelected = galleryInfoEntity.isSelected
+            }
+        }
+    }
+
+    companion object {
+        const val PLAY_LOAD_CHECK = "PLAY_LOAD_CHECK"
     }
 }

@@ -1,5 +1,6 @@
 package com.lee.album.router
 
+import com.lee.album.inter.CheckMode
 import com.lee.album.inter.OnGalleryListener
 import com.lee.album.router.GalleryParam
 
@@ -72,9 +73,24 @@ class GalleryParam private constructor() {
     var canTouchDrag = false
 
     /**
+     * 选择模式，单选or多选，默认单选
+     */
+    @kotlin.jvm.JvmField
+    var checkMode = CheckMode.SINGLE_MODE
+
+
+    /**
+     * 多选模式下最大可选为9
+     */
+    @kotlin.jvm.JvmField
+    var checkMaxCount = 9
+
+    /**
      * 重置数据
      */
     private fun reset() {
+        checkMaxCount = 9
+        checkMode = CheckMode.SINGLE_MODE
         listPictureCorner = 0
         listPictureColumnSpace = 0
         listPictureMargin = 0
