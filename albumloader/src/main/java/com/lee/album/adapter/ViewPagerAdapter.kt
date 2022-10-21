@@ -5,12 +5,10 @@ import android.widget.ImageView
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.lee.album.R
 import com.lee.album.activity.normal.NormalGalleryViewModel
-import com.lee.album.activity.preview.PicturePreViewModel
 import com.lee.album.databinding.ItemPreviewLayoutBinding
 import com.lee.album.entity.GalleryInfoEntity
 

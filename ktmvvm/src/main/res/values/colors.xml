@@ -112,6 +112,11 @@
     <color name="color_80black">#33000000</color>
     <color name="color_90black">#1a000000</color>
     <color name="color_60black">#66000000</color>
+    <color name="color_30black">#b3000000</color>
     <color name="color_44c460">#44c460</color>
     <color name="color_2D2D2D">#2D2D2D</color>
+    <color name="color_393531">#393531</color>
+    <color name="color_333230">#333230</color>
+    <color name="translate">#00000000</color>
+    <color name="color_30181818">#b3181818</color>
 </resources>

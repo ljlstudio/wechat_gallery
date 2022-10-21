@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:bind="http://schemas.android.com/apk/res-auto">
+    <data>
+
+        <variable
+            name="model"
+            type="com.lee.album.activity.normal.NormalGalleryViewModel" />
+
+        <import type="android.view.View" />
+
+        <import type="android.R.string" />
+    </data>
+
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/top"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:background="@drawable/gradient_down_shape">
+
+
+
+            <FrameLayout
+                android:layout_marginBottom="5dp"
+                android:layout_marginRight="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:padding="5dp">
+
+                <ImageView
+                    android:id="@+id/iv_check"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@drawable/picture_check_status" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentBottom="true"
+                android:padding="5dp">
+
+                <ImageView
+                    android:id="@+id/iv_back"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/left_back" />
+            </FrameLayout>
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:background="#00000000"
+            android:layout_above="@+id/bottom"
+            android:layout_below="@+id/top"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/bottom"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/gradient_down_shape">
+
+            <RelativeLayout
+
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:layout_alignParentBottom="true">
+
+                <RelativeLayout
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp">
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="15dp"
+                        android:clickable="@{model.hasSelected}"
+                        android:onClick="@{()->model.clickPreview()}"
+                        android:text="编辑"
+                        android:textColor="@color/buttom_text_color"
+                        android:textSize="13sp"
+                        bind:bindTvSelected="@{model.hasSelected}" />
+
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:onClick="@{()->model.checkOrigen()}">
+
+                        <ImageView
+
+                            android:id="@+id/iv_origen"
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:layout_centerVertical="true"
+                            android:background="@drawable/picture_check_status"
+                            bind:bindImgSelected="@{model.hasOrigen}" />
+
+                        <TextView
+                            android:id="@+id/tv_origen"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="2dp"
+                            android:layout_toRightOf="@+id/iv_origen"
+                            android:text="原图"
+                            android:textColor="@color/buttom_text_color"
+                            android:textSize="13sp"
+                            bind:bindTvSelected="@{model.hasOrigen}" />
+
+
+                    </RelativeLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="15dp"
+                        android:background="@drawable/button_selected"
+                        android:gravity="center"
+                        android:paddingLeft="10dp"
+                        android:paddingTop="4dp"
+                        android:paddingRight="10dp"
+                        android:paddingBottom="4dp"
+                        android:textColor="@color/buttom_text_color"
+                        android:textSize="13sp"
+                        bind:bindTvContentSend="@{model.checkSize}"
+                        bind:bindTvSelected="@{model.hasSelected}" />
+
+                </RelativeLayout>
+            </RelativeLayout>
+
+        </RelativeLayout>
+    </RelativeLayout>
+
+</layout>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+
     <data>
 
         <variable
@@ -8,23 +9,27 @@
             type="com.lee.album.activity.normal.NormalGalleryViewModel" />
     </data>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-
-    <androidx.viewpager2.widget.ViewPager2
-        android:background="@color/color_010101"
-        android:layout_centerInParent="true"
-        android:id="@+id/viewpager_horizontal"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal"
+        android:layout_height="match_parent">
 
-        app:bindPageCurrentItem="@{model.pageCurrentItem}"
-        app:bindViewPagerAdapter="@{model.previewAdapter}"
-        tools:ignore="MissingConstraints" />
 
-</RelativeLayout>
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/viewpager_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:background="@color/color_010101"
+            android:orientation="horizontal"
+
+            app:bindPageCurrentItem="@{model.pageCurrentItem}"
+            app:bindViewPagerAdapter="@{model.previewAdapter}"
+            tools:ignore="MissingConstraints" />
+
+
+        <com.lee.album.widget.PreviewStatusView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
 
 </layout>

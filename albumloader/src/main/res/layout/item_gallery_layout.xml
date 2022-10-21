@@ -40,12 +40,13 @@
             android:background="@color/color_60black" />
 
         <FrameLayout
-            android:onClick="@{()->model.checkPicture(position,data)}"
-            android:padding="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:onClick="@{()->model.checkPicture(position,data)}"
+            android:padding="5dp">
+
             <ImageView
                 android:id="@+id/iv_check"
                 android:layout_width="20dp"
