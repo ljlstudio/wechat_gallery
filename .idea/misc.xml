@@ -3,6 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/wechat_gallery/albumloader/src/main/res/drawable/button_2d2d2d_shape.xml" value="0.207" />
+        <entry key="..\:/wechat_gallery/albumloader/src/main/res/drawable/button_selected.xml" value="0.207" />
+        <entry key="..\:/wechat_gallery/albumloader/src/main/res/drawable/button_shape.xml" value="0.207" />
         <entry key="..\:/wechat_gallery/albumloader/src/main/res/drawable/corner_common_100_f2f2f2_shape.xml" value="0.207" />
         <entry key="..\:/wechat_gallery/albumloader/src/main/res/drawable/gallery_list_press_selector.xml" value="0.207" />
         <entry key="..\:/wechat_gallery/albumloader/src/main/res/drawable/gallery_list_status.xml" value="0.207" />
@@ -11,7 +14,7 @@
         <entry key="..\:/wechat_gallery/albumloader/src/main/res/layout/item_gallery_layout.xml" value="0.36614583333333334" />
         <entry key="..\:/wechat_gallery/albumloader/src/main/res/layout/item_gallery_list_layout.xml" value="0.36614583333333334" />
         <entry key="..\:/wechat_gallery/albumloader/src/main/res/layout/item_preview_layout.xml" value="0.36614583333333334" />
-        <entry key="..\:/wechat_gallery/albumloader/src/main/res/layout/normal_gallery_activity.xml" value="0.36614583333333334" />
+        <entry key="..\:/wechat_gallery/albumloader/src/main/res/layout/normal_gallery_activity.xml" value="0.33" />
         <entry key="..\:/wechat_gallery/albumloader/src/main/res/layout/picture_preview_layout.xml" value="0.36614583333333334" />
         <entry key="..\:/wechat_gallery/albumloader/src/main/res/layout/wechat_title_layout.xml" value="0.36614583333333334" />
       </map>

@@ -16,7 +16,7 @@ class MainActivity : AppCompatActivity() {
             .widthListPictureRowSpace(2)
             .widthListPictureCorner(1)
             .withShouldLoadPaging(false)
-            .widthPageSize(18)
+            .widthPageSize(15)
             .widthListPicturePlaceholder(com.google.android.material.R.color.design_bottom_navigation_shadow_color)
             .widthOnGalleryListener(object : OnGalleryListener {
                 override fun clickGallery(path: String?, position: Int) {

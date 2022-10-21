@@ -49,8 +49,6 @@ class PicturePreViewActivity : RxAppCompatActivity() {
             val extras = intent.extras
             extras?.let {
                 val position = it.getInt(Constants.KEY_POSITION, -1)
-                val classifyName = it.getString(Constants.KEY_NAME, "")
-                val id = it.getString(Constants.KEY_ID, "")
                 normalModel?.pageCurrentItem?.set(position)
                 Log.i("position",""+position)
 

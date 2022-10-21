@@ -167,4 +167,16 @@ object BindingAdapter {
     fun setRotateImageViewRotate(rotateImageView: RotateImageView, boolean: Boolean) {
         rotateImageView.rotate(boolean)
     }
+
+    @BindingAdapter("bindImgSelected")
+    @JvmStatic
+    fun setImageSelected(imageView: ImageView, selected: Boolean) {
+        imageView.isSelected = selected
+    }
+
+    @BindingAdapter("bindTvSelected")
+    @JvmStatic
+    fun setTextSelected(textView: TextView, selected: Boolean) {
+        textView.isSelected = selected
+    }
 }

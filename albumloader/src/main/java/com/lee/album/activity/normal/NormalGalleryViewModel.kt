@@ -81,14 +81,32 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
     var scrollListener: ObservableField<RecyclerView.OnScrollListener>? =
         ObservableField()
 
+    private var galleryParam: GalleryParam? = null
+    private var pageSize: Int? = 0
+    private var currentPageSize: Int? = 0
+
+    /**
+     * --------------大图预览适配器------------------------------------
+     */
     var pageCurrentItem: ObservableField<Int>? = ObservableField(0)
     var previewAdapter: ObservableField<ViewPagerAdapter>? =
         ObservableField(ViewPagerAdapter(this))
 
 
-    private var galleryParam: GalleryParam? = null
-    private var pageSize: Int? = 0
-    private var currentPageSize: Int? = 0
+    /**
+     * -------------选中相关-----------------------------------------
+     */
+
+    private var checkList: ObservableField<MutableList<GalleryInfoEntity>>? =
+        ObservableField(arrayListOf())
+
+    var tempPreview: ObservableField<Boolean>? =
+        ObservableField(false)
+
+    var hasSelected: ObservableField<Boolean>? = ObservableField(false)
+    var hasOrigen: ObservableField<Boolean>? = ObservableField(false)
+
+
     override fun onCreate() {
         super.onCreate()
         Log.i(TAG, "on create is" + System.currentTimeMillis())
@@ -176,42 +194,6 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
     }
 
 
-    /**
-     * 选中图片
-     */
-    fun clickPicture(galleryInfoEntity: GalleryInfoEntity?, position: Int) {
-        galleryInfoEntity?.let {
-            if (galleryParam?.onGalleryListener != null) {
-//                galleryParam?.onGalleryListener?.clickGallery(galleryInfoEntity.imgPath, position)
-                //进入预览页
-                val bundle = Bundle()
-                bundle.putString(Constants.KEY_PATH, galleryInfoEntity.imgPath)
-                bundle.putInt(Constants.KEY_POSITION, position)
-                bundle.putString(Constants.KEY_NAME, galleryInfoEntity.displayName)
-                bundle.putString(Constants.KEY_ID, galleryInfoEntity.displayId)
-                startActivity(PicturePreViewActivity::class.java, bundle)
-            }
-        }
-    }
-
-    /**
-     * 点击分页列表item
-     */
-    fun clickClassify(data: AlbumData?, position: Int) {
-        setClassifyStatus(false)
-        data?.let {
-            if (tvContent?.get()?.isNotEmpty() == true && tvContent?.get() == data.albumName) {
-                return
-            }
-            tvContent?.set(data.albumName)
-            adapter?.get()?.setNewInstance(null)
-            previewAdapter?.get()?.setNewInstance(null)
-            loader?.loadTitleListData(getApplication(), data.albumName, data.id)
-        }
-
-    }
-
-
     override fun onDestroy() {
         super.onDestroy()
         if (loader != null) {
@@ -262,15 +244,97 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
      */
     fun checkPicture(position: Int, galleryInfoEntity: GalleryInfoEntity?) {
         galleryInfoEntity?.let {
+
+            if (galleryInfoEntity.isSelected) {
+                checkList?.get()?.remove(galleryInfoEntity)
+            } else {
+                checkList?.get()?.add(galleryInfoEntity)
+            }
+            hasSelected?.set(checkList?.get()?.size!! > 0)
+            Log.i(TAG, "check picture size =" + checkList?.get()?.size)
             galleryInfoEntity.isSelected = !galleryInfoEntity.isSelected
             adapter?.get()?.notifyItemChanged(position, GalleryItemAdapter.PLAY_LOAD_CHECK)
         }
+    }
+
+    /**
+     * 选中图片
+     */
+    fun clickPicture(galleryInfoEntity: GalleryInfoEntity?, position: Int) {
+        galleryInfoEntity?.let {
+            if (galleryParam?.onGalleryListener != null) {
+//                galleryParam?.onGalleryListener?.clickGallery(galleryInfoEntity.imgPath, position)
+                //进入预览页
+                if (tempPreview?.get() == true) {
+                    tempPreview?.set(false)
+                    previewAdapter?.get()?.setNewInstance(adapter?.get()?.data)
+                }
+                goPicturePreview(position)
+            }
+        }
+    }
+
+    private fun goPicturePreview(
+        position: Int
+    ) {
+        val bundle = Bundle()
+
+        bundle.putInt(Constants.KEY_POSITION, position)
+        startActivity(PicturePreViewActivity::class.java, bundle)
+    }
+
+    /**
+     * 进入预览
+     */
+
+
+    /**
+     * 点击分页列表item
+     */
+    fun clickClassify(data: AlbumData?, position: Int) {
+        setClassifyStatus(false)
+        data?.let {
+            if (tvContent?.get()?.isNotEmpty() == true && tvContent?.get() == data.albumName) {
+                return
+            }
+            tvContent?.set(data.albumName)
+            adapter?.get()?.setNewInstance(null)
+            previewAdapter?.get()?.setNewInstance(null)
+            loader?.loadTitleListData(getApplication(), data.albumName, data.id)
+        }
+
+    }
+
+
+    /**
+     * 选中原图
+     */
+    fun checkOrigen() {
+        hasOrigen?.set(!hasOrigen?.get()!!)
+    }
+
+
+    /**
+     * 点击预览
+     */
+    fun clickPreview() {
+
+        //拿到之前的数据，存储到成临时变量,因为返回来之后还要设置回来
+        tempPreview?.set(true)
+
+        //先置空当前的预览页数据，再设置
+        previewAdapter?.get()?.setNewInstance(null)
+        //再设置当前选中数据
+        previewAdapter?.get()?.setNewInstance(checkList?.get())
+
+        goPicturePreview(0)
     }
 
     override fun onCleared() {
         super.onCleared()
         Log.i(TAG, "on cleared ")
     }
+
 
     //    private var scrollerListener: RecyclerView.OnScrollListener =
 //        object : RecyclerView.OnScrollListener() {
