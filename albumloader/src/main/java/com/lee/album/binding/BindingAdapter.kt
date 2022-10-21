@@ -179,4 +179,15 @@ object BindingAdapter {
     fun setTextSelected(textView: TextView, selected: Boolean) {
         textView.isSelected = selected
     }
+
+    @BindingAdapter("bindTvContentSend")
+    @JvmStatic
+    fun setTextSend(textView: TextView, count: Int) {
+        val name: String = if (count > 0) {
+            "发送($count)"
+        } else {
+            "发送"
+        }
+        textView.text = name
+    }
 }

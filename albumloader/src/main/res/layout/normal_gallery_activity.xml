@@ -11,6 +11,7 @@
 
         <import type="android.view.View" />
 
+        <import type="android.R.string" />
     </data>
 
     <RelativeLayout
@@ -198,17 +199,19 @@
 
                 <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="30dp"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
                     android:background="@drawable/button_selected"
                     android:gravity="center"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="15dp"
-                    android:text="发送"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
                     android:textColor="@color/buttom_text_color"
                     android:textSize="13sp"
+                    bind:bindTvContentSend="@{model.checkSize}"
                     bind:bindTvSelected="@{model.hasSelected}" />
 
             </RelativeLayout>

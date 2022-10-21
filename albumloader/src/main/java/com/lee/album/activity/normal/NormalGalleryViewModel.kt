@@ -97,12 +97,13 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
      * -------------选中相关-----------------------------------------
      */
 
-    private var checkList: ObservableField<MutableList<GalleryInfoEntity>>? =
+    var checkList: ObservableField<MutableList<GalleryInfoEntity>>? =
         ObservableField(arrayListOf())
 
     var tempPreview: ObservableField<Boolean>? =
         ObservableField(false)
 
+    var checkSize: ObservableField<Int>? = ObservableField(0)
     var hasSelected: ObservableField<Boolean>? = ObservableField(false)
     var hasOrigen: ObservableField<Boolean>? = ObservableField(false)
 
@@ -250,6 +251,7 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
             } else {
                 checkList?.get()?.add(galleryInfoEntity)
             }
+            checkSize?.set(checkList?.get()?.size)
             hasSelected?.set(checkList?.get()?.size!! > 0)
             Log.i(TAG, "check picture size =" + checkList?.get()?.size)
             galleryInfoEntity.isSelected = !galleryInfoEntity.isSelected
