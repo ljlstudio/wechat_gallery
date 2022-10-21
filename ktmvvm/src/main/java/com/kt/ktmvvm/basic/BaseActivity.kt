@@ -7,9 +7,11 @@ import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.gyf.immersionbar.ktx.immersionBar
 import com.kt.ktmvvm.basic.BaseViewModel.Companion.ParameterField.BUNDLE
 import com.kt.ktmvvm.basic.BaseViewModel.Companion.ParameterField.CLASS
 import com.kt.ktmvvm.basic.BaseViewModel.Companion.ParameterField.REQUEST
+import com.kt.ktmvvm.lib.R
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity
 import java.lang.reflect.ParameterizedType
 
@@ -34,6 +36,7 @@ abstract class BaseActivity<V : ViewDataBinding, VM : BaseViewModel> : RxAppComp
         //页面事件监听的方法，一般用于ViewModel层转到View层的事件注册
         initViewObservable()
     }
+
 
 
     private fun registerUIChangeLiveDataCallBack() {

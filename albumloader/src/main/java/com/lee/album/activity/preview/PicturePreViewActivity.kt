@@ -5,6 +5,8 @@ import android.util.Log
 import android.view.ViewTreeObserver
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
+import com.gyf.immersionbar.BarHide
+import com.gyf.immersionbar.ktx.immersionBar
 import com.lee.album.Constants
 import com.lee.album.R
 import com.lee.album.activity.normal.NormalGalleryActivity
@@ -21,7 +23,11 @@ class PicturePreViewActivity : RxAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        immersionBar {
+            hideBar(BarHide.FLAG_HIDE_BAR)
+            statusBarColor(com.kt.ktmvvm.lib.R.color.color_3C3B39)
 
+        }
 
         binding = DataBindingUtil.setContentView(this, R.layout.picture_preview_layout)
 

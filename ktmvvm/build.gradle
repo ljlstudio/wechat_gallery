@@ -94,6 +94,11 @@ dependencies {
     api "androidx.activity:activity-ktx:1.6.0-alpha01"
     implementation 'org.jetbrains:annotations:15.0'
 
+    //沉浸式状态栏
+// 基础依赖包，必须要依赖
+    api 'com.geyifeng.immersionbar:immersionbar:3.2.2'
+// kotlin扩展（可选）
+    api 'com.geyifeng.immersionbar:immersionbar-ktx:3.2.2'
 
     //httpDns 优化
     implementation 'com.aliyun.ams:alicloud-android-httpdns:2.2.2'
