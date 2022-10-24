@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:bind="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -28,6 +29,7 @@
 
 
         <com.lee.album.widget.PreviewStatusView
+            android:id="@+id/preview_status"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </RelativeLayout>

@@ -14,9 +14,9 @@ import androidx.databinding.DataBindingUtil
 import com.lee.album.R
 import com.lee.album.activity.normal.NormalGalleryActivity
 import com.lee.album.activity.normal.NormalGalleryViewModel
-import com.lee.album.databinding.PreviewStatusLayoutBinding
 
-class PreviewStatusView : RelativeLayout {
+class AutoRl : RelativeLayout {
+
 
     constructor(context: Context?) : super(context!!) {}
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
@@ -33,36 +33,40 @@ class PreviewStatusView : RelativeLayout {
     }
 
 
-    var binding: PreviewStatusLayoutBinding? = null
+    val single = 1
+    var multi = 2
+    var mode: Int = single
+
+
+    var gestureDetector: GestureDetector? = null
 
     @SuppressLint("ClickableViewAccessibility")
     private fun initialize(context: Context, attrs: AttributeSet?) {
-        val normalModel =
-            NormalGalleryActivity.activity?.viewModels<NormalGalleryViewModel>()?.value
-        binding = DataBindingUtil.inflate(
-            LayoutInflater.from(context),
-            R.layout.preview_status_layout,
-            this,
-            true
-        )
-        binding?.model = normalModel
 
+        gestureDetector = GestureDetector(simpleOnGestureListener)
 
     }
 
 
-    /**
-     * 设置状态
-     */
-    fun setStatus() {
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        gestureDetector?.onTouchEvent(event)
 
-        if (binding?.top?.visibility == View.GONE) {
-            binding?.top?.visibility = View.VISIBLE
-            binding?.bottom?.visibility = View.VISIBLE
-        } else {
-            binding?.top?.visibility = View.GONE
-            binding?.bottom?.visibility = View.GONE
+
+        return true
+    }
+
+    //拦截事件
+    private var simpleOnGestureListener = object : GestureDetector.SimpleOnGestureListener() {
+        override fun onSingleTapUp(e: MotionEvent?): Boolean {
+
+            Log.i("XXX", "XXX")
+            return true
         }
+
+        override fun onDown(e: MotionEvent?): Boolean {
+            return true
+        }
+
     }
 
 

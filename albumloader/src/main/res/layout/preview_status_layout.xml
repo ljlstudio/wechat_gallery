@@ -60,12 +60,12 @@
 
 
         <RelativeLayout
-            android:background="#00000000"
+            android:id="@+id/center_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_above="@+id/bottom"
             android:layout_below="@+id/top"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        </RelativeLayout>
+            android:background="#00000000" />
 
         <RelativeLayout
             android:id="@+id/bottom"

@@ -3,12 +3,17 @@ package com.lee.album.activity.normal
 import android.app.Application
 import android.os.Bundle
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
+import android.widget.ImageView
 import androidx.databinding.ObservableField
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
+import com.github.chrisbanes.photoview.OnPhotoTapListener
+import com.github.chrisbanes.photoview.PhotoView
 import com.kt.ktmvvm.basic.BaseViewModel
 import com.kt.ktmvvm.basic.SingleLiveEvent
 import com.lee.album.AlbumLoader
@@ -34,7 +39,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 class NormalGalleryViewModel(application: Application) : BaseViewModel(application),
     LoaderDataCallBack,
-    VerticalDrawerLayout.VerticalDrawerListener {
+    VerticalDrawerLayout.VerticalDrawerListener,
+    OnPhotoTapListener {
 
     var manager: ObservableField<GalleryGridLayoutManager>? =
         ObservableField(GalleryGridLayoutManager(application, 3))
@@ -91,6 +97,9 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
     var pageCurrentItem: ObservableField<Int>? = ObservableField(0)
     var previewAdapter: ObservableField<ViewPagerAdapter>? =
         ObservableField(ViewPagerAdapter(this))
+
+    var photoTouchListener: ObservableField<OnPhotoTapListener>? = ObservableField(this)
+    var status:SingleLiveEvent<Boolean>?= SingleLiveEvent()
 
 
     /**
@@ -337,6 +346,34 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
         Log.i(TAG, "on cleared ")
     }
 
+
+    inner class PageListener : ViewPager2.OnPageChangeCallback() {
+
+        override fun onPageSelected(position: Int) {
+            super.onPageSelected(position)
+//            val size: Int? = adapter?.get()?.data?.size
+//            var currentPosition = size?.let {
+//                BannerUtils.getRealPosition(
+//                    isCanLoop(), position,
+//                    it
+//                )
+//            }
+//            Log.e(TAG, "the size is$position")
+//            if (size!! > 0 && isCanLoop() && position == 0 || position == Int.MAX_VALUE - 1) {
+//                currentPosition?.let { setCurrentItem(it) }
+//            }
+
+        }
+
+
+    }
+
+
+
+    override fun onPhotoTap(view: ImageView?, x: Float, y: Float) {
+        Log.i(TAG,"xxx")
+        status?.postValue(true)
+    }
 
     //    private var scrollerListener: RecyclerView.OnScrollListener =
 //        object : RecyclerView.OnScrollListener() {

@@ -43,7 +43,9 @@ class PicturePreViewActivity : RxAppCompatActivity() {
         binding?.model = normalModel
 
 
-
+        normalModel?.status?.observe(this, observer = {
+            binding?.previewStatus?.setStatus()
+        })
         layoutChangedListener=ViewTreeObserver.OnGlobalLayoutListener {
 
             val extras = intent.extras

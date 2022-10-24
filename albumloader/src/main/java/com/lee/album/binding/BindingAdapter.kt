@@ -1,5 +1,6 @@
 package com.lee.album.binding
 
+import android.annotation.SuppressLint
 import android.net.Uri
 import android.view.View
 import android.view.ViewGroup
@@ -14,8 +15,11 @@ import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
+import com.github.chrisbanes.photoview.OnPhotoTapListener
+import com.github.chrisbanes.photoview.PhotoView
 import com.google.android.material.imageview.ShapeableImageView
 import com.lee.album.widget.AutoTranslateView
+import com.lee.album.widget.PreviewStatusView
 import com.lee.album.widget.RotateImageView
 import com.lee.album.widget.VerticalDrawerLayout
 import java.util.*
@@ -190,4 +194,20 @@ object BindingAdapter {
         }
         textView.text = name
     }
+
+    @SuppressLint("ClickableViewAccessibility")
+    @BindingAdapter("bindPhotoTouchListener")
+    @JvmStatic
+    fun setPhotoViewTouch(photoView: PhotoView,tapListener: OnPhotoTapListener){
+        photoView.attacher.setOnPhotoTapListener(tapListener)
+    }
+
+
+    @BindingAdapter("bindStatusView")
+    @JvmStatic
+    fun setPhotoViewStatus(previewStatusView: PreviewStatusView,boolean: Boolean){
+        previewStatusView.setStatus()
+    }
+
+
 }

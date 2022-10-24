@@ -43,6 +43,8 @@ class NormalGalleryActivity : BaseActivity<NormalGalleryActivityBinding, NormalG
 
     override fun initViewObservable() {
         super.initViewObservable()
+
+
         viewModel?.params?.observe(this, observer = {
             binding?.recycler?.apply {
                 (layoutParams as RelativeLayout.LayoutParams).leftMargin =
