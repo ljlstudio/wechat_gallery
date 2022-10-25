@@ -24,7 +24,6 @@
             android:background="@color/color_010101"
             android:orientation="horizontal"
             app:bindPageListener="@{model.pagerListener}"
-            app:bindPageCurrentItem="@{model.pageCurrentItem}"
             app:bindViewPagerAdapter="@{model.previewAdapter}"
             tools:ignore="MissingConstraints" />
 

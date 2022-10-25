@@ -42,5 +42,6 @@ class MainActivity : AppCompatActivity() {
             .startGallery()
 
 
+        finish()
     }
 }

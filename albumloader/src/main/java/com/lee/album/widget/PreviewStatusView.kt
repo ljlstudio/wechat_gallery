@@ -55,7 +55,6 @@ class PreviewStatusView : RelativeLayout {
      * 设置状态
      */
     fun setStatus() {
-
         if (binding?.top?.visibility == View.GONE) {
             binding?.top?.visibility = View.VISIBLE
             binding?.bottom?.visibility = View.VISIBLE

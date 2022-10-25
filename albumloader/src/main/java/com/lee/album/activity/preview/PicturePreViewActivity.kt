@@ -36,6 +36,7 @@ class PicturePreViewActivity : RxAppCompatActivity() {
     }
 
 
+    private var first: Boolean = false
 
 
     private fun initParam() {
@@ -53,13 +54,17 @@ class PicturePreViewActivity : RxAppCompatActivity() {
         })
         layoutChangedListener = ViewTreeObserver.OnGlobalLayoutListener {
 
-            val extras = intent.extras
-            extras?.let {
-                val position = it.getInt(Constants.KEY_POSITION, -1)
-                normalModel?.pageCurrentItem?.set(position)
-                Log.i("position", "" + position)
+            if (!first) {
+                first = true
+                val extras = intent.extras
+                extras?.let {
+                    val position = it.getInt(Constants.KEY_POSITION, -1)
+                    binding?.viewpagerHorizontal?.setCurrentItem(position, false)
+//                normalModel?.pageCurrentItem?.set(position)
 
+                }
             }
+
             binding?.viewpagerHorizontal?.viewTreeObserver?.removeOnGlobalLayoutListener { layoutChangedListener }
             layoutChangedListener = null
         }

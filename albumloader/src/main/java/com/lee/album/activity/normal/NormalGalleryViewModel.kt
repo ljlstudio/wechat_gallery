@@ -126,7 +126,6 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
     override fun onCreate() {
         super.onCreate()
         Log.i(TAG, "on create is" + System.currentTimeMillis())
-        pageCurrentItem?.set(0)
         pagerListener?.set(PageListener())
 //        scrollListener?.set(scrollerListener)
         galleryParam = GalleryParam.instance
@@ -314,6 +313,7 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
     private fun goPicturePreview(
         position: Int
     ) {
+        pageCurrentItem?.set(position)
         val bundle = Bundle()
         bundle.putInt(Constants.KEY_POSITION, position)
         startActivity(PicturePreViewActivity::class.java, bundle)
@@ -389,11 +389,12 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
     inner class PageListener : ViewPager2.OnPageChangeCallback() {
 
         override fun onPageSelected(position: Int) {
-            super.onPageSelected(positio
+            super.onPageSelected(position)
             val data = previewAdapter?.get()?.data
             currentPosition = position
             data?.let {
                 val galleryInfoEntity = data[position]
+                Log.i(TAG,"the selected ="+galleryInfoEntity.isSelected)
                 previewCheckStatus?.set(galleryInfoEntity.isSelected)
             }
 

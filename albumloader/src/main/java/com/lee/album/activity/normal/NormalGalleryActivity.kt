@@ -8,6 +8,7 @@ import android.view.Gravity
 import android.widget.RelativeLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
+import com.gyf.immersionbar.BarHide
 import com.gyf.immersionbar.ktx.immersionBar
 import com.kt.ktmvvm.basic.BaseActivity
 import com.lee.album.BR
@@ -33,8 +34,11 @@ class NormalGalleryActivity : BaseActivity<NormalGalleryActivityBinding, NormalG
 
     override fun initParam() {
         immersionBar {
+
             statusBarColor(com.kt.ktmvvm.lib.R.color.color_3C3B39)
-              fitsSystemWindows(true)
+            fitsSystemWindows(false)
+            statusBarView(binding?.view)
+            hideBar(BarHide.FLAG_HIDE_BAR)
         }
         activity = this
         binding?.classifyLayout?.setDrawerLockMode(VerticalDrawerLayout.LOCK_MODE_LOCKED_CLOSED)
