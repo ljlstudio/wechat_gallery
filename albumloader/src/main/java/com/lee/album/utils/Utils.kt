@@ -1,9 +1,12 @@
 package com.lee.album.utils
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.media.ExifInterface
+import android.os.Build
 import android.util.DisplayMetrics
+import android.view.View
 import android.view.WindowManager
 import java.io.File
 import java.io.IOException
@@ -93,6 +96,17 @@ class Utils {
 
         fun existsFile(file: File?): Boolean {
             return file != null && file.exists()
+        }
+        fun hidTitle(activity: Activity) {
+            val window = activity.window
+            window.decorView.systemUiVisibility =
+                View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+            val attributes = window.attributes
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                attributes.layoutInDisplayCutoutMode =
+                    WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+            }
+            window.attributes = attributes
         }
     }
 

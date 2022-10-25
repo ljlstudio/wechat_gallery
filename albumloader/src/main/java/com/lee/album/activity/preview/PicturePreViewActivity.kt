@@ -18,14 +18,15 @@ class PicturePreViewActivity : RxAppCompatActivity() {
 
     var binding: PicturePreviewLayoutBinding? = null
 
-    private val normalModel = NormalGalleryActivity.activity?.viewModels<NormalGalleryViewModel>()?.value
+    private val normalModel =
+        NormalGalleryActivity.activity?.viewModels<NormalGalleryViewModel>()?.value
     private var layoutChangedListener: ViewTreeObserver.OnGlobalLayoutListener? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         immersionBar {
-            hideBar(BarHide.FLAG_HIDE_BAR)
             statusBarColor(com.kt.ktmvvm.lib.R.color.color_3C3B39)
+            hideBar(BarHide.FLAG_HIDE_BAR)
 
         }
 
@@ -35,7 +36,7 @@ class PicturePreViewActivity : RxAppCompatActivity() {
     }
 
 
-//
+
 
     private fun initParam() {
 
@@ -46,16 +47,20 @@ class PicturePreViewActivity : RxAppCompatActivity() {
         normalModel?.status?.observe(this, observer = {
             binding?.previewStatus?.setStatus()
         })
-        layoutChangedListener=ViewTreeObserver.OnGlobalLayoutListener {
+
+        normalModel?.leftFinish?.observe(this, observer = {
+            finish()
+        })
+        layoutChangedListener = ViewTreeObserver.OnGlobalLayoutListener {
 
             val extras = intent.extras
             extras?.let {
                 val position = it.getInt(Constants.KEY_POSITION, -1)
                 normalModel?.pageCurrentItem?.set(position)
-                Log.i("position",""+position)
+                Log.i("position", "" + position)
 
             }
-            binding?.viewpagerHorizontal?.viewTreeObserver?.removeOnGlobalLayoutListener {layoutChangedListener }
+            binding?.viewpagerHorizontal?.viewTreeObserver?.removeOnGlobalLayoutListener { layoutChangedListener }
             layoutChangedListener = null
         }
 
@@ -65,8 +70,6 @@ class PicturePreViewActivity : RxAppCompatActivity() {
 
 
     }
-
-
 
 
 }

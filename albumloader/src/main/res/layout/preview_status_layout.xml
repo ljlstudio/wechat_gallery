@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:bind="http://schemas.android.com/apk/res-auto">
+
     <data>
 
         <variable
@@ -14,7 +15,8 @@
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/translate">
 
         <RelativeLayout
             android:id="@+id/top"
@@ -23,30 +25,32 @@
             android:background="@drawable/gradient_down_shape">
 
 
-
             <FrameLayout
-                android:layout_marginBottom="5dp"
-                android:layout_marginRight="10dp"
+                android:onClick="@{()->model.checkPreviewImg()}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentBottom="true"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="5dp"
                 android:padding="5dp">
 
                 <ImageView
                     android:id="@+id/iv_check"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:background="@drawable/picture_check_status" />
+                    android:background="@drawable/picture_check_status"
+                    bind:bindIvSelected="@{model.previewCheckStatus}" />
             </FrameLayout>
 
             <FrameLayout
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentBottom="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="5dp"
+                android:onClick="@{()->model.leftFinish()}"
                 android:padding="5dp">
 
                 <ImageView

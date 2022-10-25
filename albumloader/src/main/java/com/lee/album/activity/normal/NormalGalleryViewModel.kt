@@ -13,7 +13,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.github.chrisbanes.photoview.OnPhotoTapListener
-import com.github.chrisbanes.photoview.PhotoView
+
 import com.kt.ktmvvm.basic.BaseViewModel
 import com.kt.ktmvvm.basic.SingleLiveEvent
 import com.lee.album.AlbumLoader
@@ -35,6 +35,9 @@ import com.lee.album.widget.GridSpaceItemDecoration
 import com.lee.album.widget.VerticalDrawerLayout
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import java.util.*
+import java.util.Collections.addAll
+import kotlin.collections.ArrayList
 
 
 class NormalGalleryViewModel(application: Application) : BaseViewModel(application),
@@ -75,7 +78,7 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
     var params: SingleLiveEvent<Boolean>? = SingleLiveEvent(
     )
 
-
+    var leftFinish: SingleLiveEvent<Boolean>? = SingleLiveEvent()
     var classifyLayoutEvent: SingleLiveEvent<Boolean>? = SingleLiveEvent()
     var ivCenter: ObservableField<Boolean>? = ObservableField()
     var loadStart: SingleLiveEvent<Boolean>? = SingleLiveEvent()
@@ -94,13 +97,15 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
     /**
      * --------------大图预览适配器------------------------------------
      */
+    var currentPosition: Int = 0
     var pageCurrentItem: ObservableField<Int>? = ObservableField(0)
     var previewAdapter: ObservableField<ViewPagerAdapter>? =
         ObservableField(ViewPagerAdapter(this))
+    var pagerListener: ObservableField<ViewPager2.OnPageChangeCallback>? = ObservableField()
 
     var photoTouchListener: ObservableField<OnPhotoTapListener>? = ObservableField(this)
-    var status:SingleLiveEvent<Boolean>?= SingleLiveEvent()
-
+    var status: SingleLiveEvent<Boolean>? = SingleLiveEvent()
+    var previewCheckStatus: ObservableField<Boolean>? = ObservableField(false)
 
     /**
      * -------------选中相关-----------------------------------------
@@ -108,6 +113,7 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
 
     var checkList: ObservableField<MutableList<GalleryInfoEntity>>? =
         ObservableField(arrayListOf())
+
 
     var tempPreview: ObservableField<Boolean>? =
         ObservableField(false)
@@ -121,6 +127,7 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
         super.onCreate()
         Log.i(TAG, "on create is" + System.currentTimeMillis())
         pageCurrentItem?.set(0)
+        pagerListener?.set(PageListener())
 //        scrollListener?.set(scrollerListener)
         galleryParam = GalleryParam.instance
         loader = AlbumLoader()
@@ -269,7 +276,23 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
     }
 
     /**
-     * 选中图片
+     * 预览页点击选中图片
+     */
+    fun checkPreviewImg() {
+        val data = previewAdapter?.get()?.data
+        val data1 = adapter?.get()?.data
+
+        if (data != null && data.size > currentPosition) {
+            val galleryInfoEntity = data[currentPosition]
+            val indexOf = data1?.indexOf(galleryInfoEntity) as Int
+
+            previewCheckStatus?.set(!galleryInfoEntity.isSelected)
+            checkPicture(indexOf, galleryInfoEntity)
+        }
+    }
+
+    /**
+     * 点击图片
      */
     fun clickPicture(galleryInfoEntity: GalleryInfoEntity?, position: Int) {
         galleryInfoEntity?.let {
@@ -285,18 +308,16 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
         }
     }
 
+    /**
+     * 进入预览图
+     */
     private fun goPicturePreview(
         position: Int
     ) {
         val bundle = Bundle()
-
         bundle.putInt(Constants.KEY_POSITION, position)
         startActivity(PicturePreViewActivity::class.java, bundle)
     }
-
-    /**
-     * 进入预览
-     */
 
 
     /**
@@ -332,13 +353,28 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
 
         //拿到之前的数据，存储到成临时变量,因为返回来之后还要设置回来
         tempPreview?.set(true)
-
         //先置空当前的预览页数据，再设置
         previewAdapter?.get()?.setNewInstance(null)
         //再设置当前选中数据
-        previewAdapter?.get()?.setNewInstance(checkList?.get())
+
+
+        //深拷贝到另一个list
+        checkList?.get()?.let {
+            val toMutableList = it.toMutableList()
+            previewAdapter?.get()?.setNewInstance(toMutableList)
+        }
+
+
 
         goPicturePreview(0)
+    }
+
+
+    /**
+     * 左按键关闭
+     */
+    fun leftFinish() {
+        leftFinish?.postValue(true)
     }
 
     override fun onCleared() {
@@ -347,21 +383,21 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
     }
 
 
+    /**
+     * 预览图滑动事件
+     */
     inner class PageListener : ViewPager2.OnPageChangeCallback() {
 
         override fun onPageSelected(position: Int) {
-            super.onPageSelected(position)
-//            val size: Int? = adapter?.get()?.data?.size
-//            var currentPosition = size?.let {
-//                BannerUtils.getRealPosition(
-//                    isCanLoop(), position,
-//                    it
-//                )
-//            }
-//            Log.e(TAG, "the size is$position")
-//            if (size!! > 0 && isCanLoop() && position == 0 || position == Int.MAX_VALUE - 1) {
-//                currentPosition?.let { setCurrentItem(it) }
-//            }
+            super.onPageSelected(positio
+            val data = previewAdapter?.get()?.data
+            currentPosition = position
+            data?.let {
+                val galleryInfoEntity = data[position]
+                previewCheckStatus?.set(galleryInfoEntity.isSelected)
+            }
+
+            //判断当前position 是否选择
 
         }
 
@@ -369,9 +405,8 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
     }
 
 
-
     override fun onPhotoTap(view: ImageView?, x: Float, y: Float) {
-        Log.i(TAG,"xxx")
+        Log.i(TAG, "xxx")
         status?.postValue(true)
     }
 
