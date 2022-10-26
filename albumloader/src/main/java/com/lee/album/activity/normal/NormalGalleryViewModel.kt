@@ -107,12 +107,13 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
 
     var status: SingleLiveEvent<Boolean>? = SingleLiveEvent()
     var previewCheckStatus: ObservableField<Boolean>? = ObservableField(false)
+    var alpha:SingleLiveEvent<Float>?= SingleLiveEvent()
 
     /**
      * -------------选中相关-----------------------------------------
      */
 
-    var checkList: ObservableField<MutableList<GalleryInfoEntity>>? =
+    private var checkList: ObservableField<MutableList<GalleryInfoEntity>>? =
         ObservableField(arrayListOf())
 
 
@@ -432,6 +433,10 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
     ) {
 
         performExitAnimation(view, translateX, translateY, w, h, scale, px, py)
+    }
+
+    override fun onMove(mAlpha: Float) {
+        alpha?.postValue(mAlpha)
     }
 
     override fun onTap(view: DragPhotoView?) {

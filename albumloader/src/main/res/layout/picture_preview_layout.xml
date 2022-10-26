@@ -13,7 +13,7 @@
     <com.lee.album.widget.ViewDragLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:id="@+id/parent"
-        android:background="@color/color_323232"
+
         android:layout_height="match_parent">
 
 

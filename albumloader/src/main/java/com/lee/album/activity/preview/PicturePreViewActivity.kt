@@ -1,6 +1,7 @@
 package com.lee.album.activity.preview
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.ViewTreeObserver
 import androidx.activity.viewModels
@@ -39,8 +40,6 @@ class PicturePreViewActivity : RxAppCompatActivity() {
     }
 
 
-
-
     private fun initParam() {
 
         binding?.viewpagerHorizontal?.offscreenPageLimit = 3
@@ -49,6 +48,14 @@ class PicturePreViewActivity : RxAppCompatActivity() {
 
         normalModel?.status?.observe(this, observer = {
             binding?.previewStatus?.setStatus()
+        })
+
+        normalModel?.alpha?.observe(this, observer = {
+            it?.let {
+                Log.i("xx", "alpha =$it")
+                binding?.viewpagerHorizontal?.background?.mutate()?.alpha = it.toInt()
+                binding?.previewStatus?.setAlphaStatus(it)
+            }
         })
 
         normalModel?.leftFinish?.observe(this, observer = {
