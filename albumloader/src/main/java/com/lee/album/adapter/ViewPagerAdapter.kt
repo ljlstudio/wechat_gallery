@@ -7,6 +7,7 @@ import androidx.databinding.ViewDataBinding
 import com.bumptech.glide.Glide
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
+import com.github.chrisbanes.photoview.PhotoView
 import com.lee.album.R
 import com.lee.album.activity.normal.NormalGalleryViewModel
 import com.lee.album.databinding.ItemPreviewLayoutBinding
@@ -27,6 +28,8 @@ class ViewPagerAdapter(var model: NormalGalleryViewModel) :
             binding?.model = model
 
             binding?.photoView?.scaleType=ImageView.ScaleType.FIT_XY
+
+
 
             binding?.photoView?.let {
                 Glide.with(context)

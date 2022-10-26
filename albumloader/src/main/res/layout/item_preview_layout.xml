@@ -14,12 +14,16 @@
         android:clipChildren="false">
 
 
-        <com.github.chrisbanes.photoview.PhotoView
+        <!--   bind:bindPhotoOutSideTouchListener="@{model.photoOutSideTouchListener}"
+            bind:bindPhotoTouchListener="@{model.photoTouchListener}"  -->
+        <com.lee.album.widget.DragPhotoView
+            bind:bindDragPhotoViewExitListener="@{model.dragPhotoExitListener}"
             bind:bindPhotoTouchListener="@{model.photoTouchListener}"
             android:id="@+id/photo_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true" />
+            android:layout_centerInParent="true"
+         />
 
     </RelativeLayout>
 

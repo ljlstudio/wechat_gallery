@@ -3,6 +3,7 @@ package com.lee.album.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import androidx.databinding.DataBindingUtil
@@ -41,6 +42,7 @@ class GalleryItemAdapter(
         val layoutParams = holder.getView<View>(R.id.layout).layoutParams
         layoutParams.height = height
         layoutParams.width = height
+        Log.i("h","height$height")
         holder.getView<View>(R.id.layout).layoutParams = layoutParams
     }
 

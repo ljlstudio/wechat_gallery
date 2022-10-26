@@ -1,19 +1,21 @@
 package com.lee.album.activity.normal
 
+import android.animation.Animator
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.app.Application
+import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
-import android.view.MotionEvent
 import android.view.View
+import android.view.animation.LinearInterpolator
 import android.widget.ImageView
 import androidx.databinding.ObservableField
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
-import com.github.chrisbanes.photoview.OnPhotoTapListener
-
+import com.github.chrisbanes.photoview.OnOutsidePhotoTapListener
 import com.kt.ktmvvm.basic.BaseViewModel
 import com.kt.ktmvvm.basic.SingleLiveEvent
 import com.lee.album.AlbumLoader
@@ -27,23 +29,17 @@ import com.lee.album.adapter.ViewPagerAdapter
 import com.lee.album.entity.AlbumData
 import com.lee.album.entity.GalleryInfoEntity
 import com.lee.album.inter.LoaderDataCallBack
-import com.lee.album.inter.LoaderStatus
 import com.lee.album.router.GalleryParam
-import com.lee.album.widget.GalleryGridLayoutManager
-import com.lee.album.widget.GalleryLayoutManager
-import com.lee.album.widget.GridSpaceItemDecoration
-import com.lee.album.widget.VerticalDrawerLayout
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import java.util.*
-import java.util.Collections.addAll
-import kotlin.collections.ArrayList
+import com.lee.album.widget.*
+import kotlin.math.abs
 
 
 class NormalGalleryViewModel(application: Application) : BaseViewModel(application),
     LoaderDataCallBack,
     VerticalDrawerLayout.VerticalDrawerListener,
-    OnPhotoTapListener {
+    DragPhotoView.OnTapListener,
+    OnOutsidePhotoTapListener,
+    DragPhotoView.OnExitListener {
 
     var manager: ObservableField<GalleryGridLayoutManager>? =
         ObservableField(GalleryGridLayoutManager(application, 3))
@@ -103,7 +99,12 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
         ObservableField(ViewPagerAdapter(this))
     var pagerListener: ObservableField<ViewPager2.OnPageChangeCallback>? = ObservableField()
 
-    var photoTouchListener: ObservableField<OnPhotoTapListener>? = ObservableField(this)
+    var photoTouchListener: ObservableField<DragPhotoView.OnTapListener>? = ObservableField(this)
+    var photoOutSideTouchListener: ObservableField<OnOutsidePhotoTapListener>? =
+        ObservableField(this)
+    var dragPhotoExitListener: ObservableField<DragPhotoView.OnExitListener>? =
+        ObservableField(this)
+
     var status: SingleLiveEvent<Boolean>? = SingleLiveEvent()
     var previewCheckStatus: ObservableField<Boolean>? = ObservableField(false)
 
@@ -382,6 +383,7 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
         Log.i(TAG, "on cleared ")
     }
 
+    val rect = Rect()
 
     /**
      * 预览图滑动事件
@@ -394,11 +396,19 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
             currentPosition = position
             data?.let {
                 val galleryInfoEntity = data[position]
-                Log.i(TAG,"the selected ="+galleryInfoEntity.isSelected)
                 previewCheckStatus?.set(galleryInfoEntity.isSelected)
+
+                val data1 = adapter?.get()?.data
+                data1?.let {
+                    val indexOf = it.indexOf(galleryInfoEntity)
+                    if (indexOf != -1) {
+                        val viewByPosition = adapter?.get()?.getViewByPosition(position, R.id.img)
+                        viewByPosition?.getGlobalVisibleRect(rect)
+                        //设置最小缩放
+                    }
+                }
             }
 
-            //判断当前position 是否选择
 
         }
 
@@ -406,39 +416,109 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
     }
 
 
-    override fun onPhotoTap(view: ImageView?, x: Float, y: Float) {
-        Log.i(TAG, "xxx")
+    override fun onOutsidePhotoTap(imageView: ImageView?) {
         status?.postValue(true)
     }
 
-    //    private var scrollerListener: RecyclerView.OnScrollListener =
-//        object : RecyclerView.OnScrollListener() {
-//            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-//                super.onScrollStateChanged(recyclerView, newState)
-//
-//
-//                if (newState == RecyclerView.SCROLL_STATE_DRAGGING && loader?.getLoaderStatus() != LoaderStatus.LOADING) {
-//
-//                    if (currentPageSize!! >= pageSize!!) {
-//                        loader?.loadListMore()
-//                        //加载
-//                    } else {
-//                        //图片已经加载完毕
-//                    }
-//                }
-//
-//
-//            }
-//
-//            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-//                super.onScrolled(recyclerView, dx, dy)
-//
-////                val findFirstVisibleItemPosition = manager?.get()?.findFirstVisibleItemPosition()
-////                val findLastVisibleItemPosition =
-////                    manager?.get()?.findLastVisibleItemPosition()?.minus(15)
-////                lastVisiblePosition = findLastVisibleItemPosition
-//
-//            }
-//        }
+    override fun onExit(
+        view: DragPhotoView,
+        translateX: Float,
+        translateY: Float,
+        w: Float,
+        h: Float,
+        scale: Float,
+        px: Float,
+        py: Float
+    ) {
+
+        performExitAnimation(view, translateX, translateY, w, h, scale, px, py)
+    }
+
+    override fun onTap(view: DragPhotoView?) {
+        status?.postValue(true)
+    }
+
+
+    private fun performExitAnimation(
+        view: DragPhotoView,
+        x: Float,
+        y: Float,
+        w: Float,
+        h: Float,
+        scale: Float,
+        px: Float,
+        py: Float
+    ) {
+        view.finishAnimationCallBack()
+
+        val array = IntArray(2) { 0 }
+
+
+        val mOriginLeft = rect.left
+        val mOriginTop = rect.top
+        val mOriginHeight = rect.height()
+        val mOriginWidth = rect.width()
+        val mOriginCenterX = mOriginLeft + mOriginWidth / 2
+        val mOriginCenterY = mOriginTop + mOriginHeight / 2
+
+        val currentWidth = w * scale
+        val currentHeight = h * scale
+
+
+        val mScaleX = mOriginWidth.toFloat() / w
+        val mScaleY = mOriginHeight.toFloat() / h
+
+        view.getLocationInWindow(array)
+        val viewX: Float = w / 2 + x - currentWidth / 2+array[0]
+        val viewY: Float = h / 2 + y - currentHeight / 2+array[1]
+
+
+//        view.pivotX = viewX
+//        view.pivotY=viewY
+        view.x = viewX
+        view.y = viewY
+
+
+        Log.i(TAG, "the x=" + viewX + "the y=" + viewY)
+
+
+        val centerX = view.x + mOriginWidth / 2
+        val centerY = view.y + mOriginHeight / 2
+
+        val translateX = mOriginCenterX - centerX
+        val translateY = mOriginCenterY - centerY
+
+
+        val animatorSet = AnimatorSet()
+        animatorSet.duration = 300
+        animatorSet.interpolator = LinearInterpolator()
+
+
+        val translateXAnimator: ValueAnimator = ValueAnimator.ofFloat(view.x, view.x + translateX)
+        translateXAnimator.addUpdateListener { valueAnimator ->
+            view.x = (valueAnimator.animatedValue as Float)
+        }
+
+        val translateYAnimator: ValueAnimator = ValueAnimator.ofFloat(view.y, view.y + translateY)
+        translateYAnimator.addUpdateListener { valueAnimator ->
+            view.y = (valueAnimator.animatedValue as Float)
+        }
+
+
+
+        animatorSet.addListener(object : Animator.AnimatorListener {
+            override fun onAnimationStart(animator: Animator?) {}
+            override fun onAnimationEnd(animator: Animator) {
+                animator.removeAllListeners()
+                leftFinish()
+            }
+
+            override fun onAnimationCancel(animator: Animator?) {}
+            override fun onAnimationRepeat(animator: Animator?) {}
+        })
+
+        animatorSet.playTogether(translateXAnimator, translateYAnimator)
+        animatorSet.start()
+    }
 
 }

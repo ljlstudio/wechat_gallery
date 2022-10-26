@@ -10,8 +10,9 @@
             type="com.lee.album.activity.normal.NormalGalleryViewModel" />
     </data>
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <com.lee.album.widget.ViewDragLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
+        android:id="@+id/parent"
         android:background="@color/color_323232"
         android:layout_height="match_parent">
 
@@ -32,6 +33,6 @@
             android:id="@+id/preview_status"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-    </RelativeLayout>
+    </com.lee.album.widget.ViewDragLayout>
 
 </layout>

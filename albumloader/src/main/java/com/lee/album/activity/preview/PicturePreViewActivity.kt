@@ -1,7 +1,7 @@
 package com.lee.album.activity.preview
 
 import android.os.Bundle
-import android.util.Log
+import android.view.View
 import android.view.ViewTreeObserver
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
@@ -12,12 +12,13 @@ import com.lee.album.R
 import com.lee.album.activity.normal.NormalGalleryActivity
 import com.lee.album.activity.normal.NormalGalleryViewModel
 import com.lee.album.databinding.PicturePreviewLayoutBinding
+import com.lee.album.widget.ViewDragHelper
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity
 
 class PicturePreViewActivity : RxAppCompatActivity() {
 
     var binding: PicturePreviewLayoutBinding? = null
-
+    private var first: Boolean = false
     private val normalModel =
         NormalGalleryActivity.activity?.viewModels<NormalGalleryViewModel>()?.value
     private var layoutChangedListener: ViewTreeObserver.OnGlobalLayoutListener? = null
@@ -33,10 +34,11 @@ class PicturePreViewActivity : RxAppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.picture_preview_layout)
 
         initParam()
+
+
     }
 
 
-    private var first: Boolean = false
 
 
     private fun initParam() {

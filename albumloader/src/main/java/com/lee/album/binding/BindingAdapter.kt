@@ -15,13 +15,11 @@ import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
+import com.github.chrisbanes.photoview.OnOutsidePhotoTapListener
 import com.github.chrisbanes.photoview.OnPhotoTapListener
 import com.github.chrisbanes.photoview.PhotoView
 import com.google.android.material.imageview.ShapeableImageView
-import com.lee.album.widget.AutoTranslateView
-import com.lee.album.widget.PreviewStatusView
-import com.lee.album.widget.RotateImageView
-import com.lee.album.widget.VerticalDrawerLayout
+import com.lee.album.widget.*
 import java.util.*
 
 object BindingAdapter {
@@ -198,8 +196,15 @@ object BindingAdapter {
     @SuppressLint("ClickableViewAccessibility")
     @BindingAdapter("bindPhotoTouchListener")
     @JvmStatic
-    fun setPhotoViewTouch(photoView: PhotoView,tapListener: OnPhotoTapListener){
-        photoView.attacher.setOnPhotoTapListener(tapListener)
+    fun setPhotoViewTouch(photoView: DragPhotoView,tapListener: DragPhotoView.OnTapListener){
+        photoView.setOnTapListener(tapListener)
+    }
+
+
+    @BindingAdapter("bindPhotoOutSideTouchListener")
+    @JvmStatic
+    fun setPhotoViewOutSideTouch(photoView: PhotoView,tapListener: OnOutsidePhotoTapListener){
+        photoView.attacher.setOnOutsidePhotoTapListener(tapListener)
     }
 
 
@@ -210,4 +215,9 @@ object BindingAdapter {
     }
 
 
+    @BindingAdapter("bindDragPhotoViewExitListener")
+    @JvmStatic
+    fun  setDragPhotoViewExitListener(dragPhotoView: DragPhotoView,listener:DragPhotoView.OnExitListener){
+        dragPhotoView.setOnExitListener(listener)
+    }
 }

@@ -100,6 +100,9 @@ dependencies {
 // kotlin扩展（可选）
     api 'com.geyifeng.immersionbar:immersionbar-ktx:3.2.2'
 
+    //拖拽库
+//    api 'androidx.draganddrop:draganddrop:1.0.0-alpha02'
+
     //httpDns 优化
     implementation 'com.aliyun.ams:alicloud-android-httpdns:2.2.2'
 
