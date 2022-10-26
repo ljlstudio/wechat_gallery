@@ -402,8 +402,9 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
                 val data1 = adapter?.get()?.data
                 data1?.let {
                     val indexOf = it.indexOf(galleryInfoEntity)
-                    if (indexOf != -1) {
-                        val viewByPosition = adapter?.get()?.getViewByPosition(position, R.id.img)
+                    Log.i(TAG, "the index of=$indexOf")
+                    if (indexOf != -1&&data.size>indexOf) {
+                        val viewByPosition = adapter?.get()?.getViewByPosition(indexOf, R.id.img)
                         viewByPosition?.getGlobalVisibleRect(rect)
                         //设置最小缩放
                     }
