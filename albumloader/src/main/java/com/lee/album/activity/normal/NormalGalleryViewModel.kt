@@ -2,7 +2,6 @@ package com.lee.album.activity.normal
 
 import android.animation.Animator
 import android.animation.AnimatorSet
-import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.app.Application
 import android.graphics.Rect
@@ -28,10 +27,10 @@ import com.lee.album.adapter.GalleryItemAdapter
 import com.lee.album.adapter.ViewPagerAdapter
 import com.lee.album.entity.AlbumData
 import com.lee.album.entity.GalleryInfoEntity
+import com.lee.album.inter.CheckMode
 import com.lee.album.inter.LoaderDataCallBack
 import com.lee.album.router.GalleryParam
 import com.lee.album.widget.*
-import kotlin.math.abs
 
 
 class NormalGalleryViewModel(application: Application) : BaseViewModel(application),
@@ -107,7 +106,7 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
 
     var status: SingleLiveEvent<Boolean>? = SingleLiveEvent()
     var previewCheckStatus: ObservableField<Boolean>? = ObservableField(false)
-    var alpha:SingleLiveEvent<Float>?= SingleLiveEvent()
+    var alpha: SingleLiveEvent<Float>? = SingleLiveEvent()
 
     /**
      * -------------选中相关-----------------------------------------
@@ -266,6 +265,9 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
             if (galleryInfoEntity.isSelected) {
                 checkList?.get()?.remove(galleryInfoEntity)
             } else {
+                //判断选中模式是单选或者多选
+                if (addMaxCount()) return
+
                 checkList?.get()?.add(galleryInfoEntity)
             }
             checkSize?.set(checkList?.get()?.size)
@@ -273,7 +275,29 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
             Log.i(TAG, "check picture size =" + checkList?.get()?.size)
             galleryInfoEntity.isSelected = !galleryInfoEntity.isSelected
             adapter?.get()?.notifyItemChanged(position, GalleryItemAdapter.PLAY_LOAD_CHECK)
+
+
         }
+    }
+
+    /**
+     * 添加限制
+     */
+    private fun addMaxCount(): Boolean {
+        when (galleryParam?.checkMode) {
+            CheckMode.SINGLE_MODE -> {
+                //如果是单选，判断是否集合大于0,
+                if (checkList?.get()?.size!! > 0) {
+                    return true
+                }
+            }
+            CheckMode.MULTIPLE_MODE -> {
+                if (checkList?.get()?.size!! >= galleryParam?.checkMaxCount!!) {
+                    return true
+                }
+            }
+        }
+        return false
     }
 
     /**
@@ -286,9 +310,15 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
         if (data != null && data.size > currentPosition) {
             val galleryInfoEntity = data[currentPosition]
             val indexOf = data1?.indexOf(galleryInfoEntity) as Int
-
-            previewCheckStatus?.set(!galleryInfoEntity.isSelected)
+            if (galleryInfoEntity.isSelected) {
+                previewCheckStatus?.set(false)
+            } else {
+                if (!addMaxCount()) {
+                    previewCheckStatus?.set(true)
+                }
+            }
             checkPicture(indexOf, galleryInfoEntity)
+
         }
     }
 
@@ -403,7 +433,7 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
                 data1?.let {
                     val indexOf = it.indexOf(galleryInfoEntity)
                     Log.i(TAG, "the index of=$indexOf")
-                    if (indexOf != -1&&data.size>indexOf) {
+                    if (indexOf != -1 && data.size > indexOf) {
                         val viewByPosition = adapter?.get()?.getViewByPosition(indexOf, R.id.img)
                         viewByPosition?.getGlobalVisibleRect(rect)
                         //设置最小缩放
@@ -433,7 +463,7 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
         py: Float
     ) {
 
-        performExitAnimation(view, translateX, translateY, w, h, scale, px, py)
+        performExitAnimation(view, translateX, translateY, w, h, scale)
     }
 
     override fun onMove(mAlpha: Float) {
@@ -451,9 +481,7 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
         y: Float,
         w: Float,
         h: Float,
-        scale: Float,
-        px: Float,
-        py: Float
+        scale: Float
     ) {
         view.finishAnimationCallBack()
 
@@ -475,8 +503,8 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
         val mScaleY = mOriginHeight.toFloat() / h
 
         view.getLocationInWindow(array)
-        val viewX: Float = w / 2 + x - currentWidth / 2+array[0]
-        val viewY: Float = h / 2 + y - currentHeight / 2+array[1]
+        val viewX: Float = w / 2 + x - currentWidth / 2 + array[0]
+        val viewY: Float = h / 2 + y - currentHeight / 2 + array[1]
 
 
 //        view.pivotX = viewX

@@ -3,6 +3,7 @@ package com.lun.wechat_gallery
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import com.lee.album.inter.CheckMode
 import com.lee.album.inter.OnGalleryListener
 import com.lee.album.router.GalleryEngine
 
@@ -17,6 +18,7 @@ class MainActivity : AppCompatActivity() {
             .widthListPictureCorner(1)
             .withShouldLoadPaging(false)
             .widthPageSize(15)
+            .widthCheckMode(CheckMode.MULTIPLE_MODE)
             .widthListPicturePlaceholder(com.google.android.material.R.color.design_bottom_navigation_shadow_color)
             .widthOnGalleryListener(object : OnGalleryListener {
                 override fun clickGallery(path: String?, position: Int) {

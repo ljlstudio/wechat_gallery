@@ -5,6 +5,7 @@ import com.lee.album.inter.OnGalleryListener
 import android.content.Context
 import android.content.Intent
 import com.lee.album.activity.normal.NormalGalleryActivity
+import com.lee.album.inter.CheckMode
 import com.lee.album.utils.Utils
 
 /**
@@ -119,6 +120,23 @@ class GalleryBuilder(private val context: Context, private val galleryEngine: Ga
         galleryParam.canTouchDrag = canTouchDrag
         return this
     }
+
+    /**
+     * 单选或者多选
+     */
+    fun widthCheckMode(checkMode: Int): GalleryBuilder {
+        galleryParam.checkMode = checkMode
+        return this
+    }
+
+    /**
+     * 最大多选数量
+     */
+    fun widthCheckMaxCount(maxCount: Int): GalleryBuilder {
+        galleryParam.checkMaxCount = maxCount
+        return this
+    }
+
 
     /**
      * 打开相册预览
