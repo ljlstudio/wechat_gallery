@@ -33,7 +33,7 @@ public class DragPhotoView extends PhotoView {
     private float mMinScale = 0.35f;
     private int mAlpha = 255;
     private final static int MAX_TRANSLATE_Y = 500;
-    private final static float DAMP_VALUE = 0.7f;
+    private final static float DAMP_VALUE = 0.55f;
 
     private final static long DURATION = 300;
     private boolean canFinish = false;

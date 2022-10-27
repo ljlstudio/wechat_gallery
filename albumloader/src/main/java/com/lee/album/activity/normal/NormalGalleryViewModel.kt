@@ -30,6 +30,7 @@ import com.lee.album.entity.GalleryInfoEntity
 import com.lee.album.inter.CheckMode
 import com.lee.album.inter.LoaderDataCallBack
 import com.lee.album.router.GalleryParam
+import com.lee.album.utils.Utils
 import com.lee.album.widget.*
 import kotlin.math.abs
 
@@ -516,6 +517,8 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
         val mScaleX = mOriginWidth.toFloat() / currentWidth
         val mScaleY = mOriginHeight.toFloat() / currentHeight
 
+
+
         view.getLocationInWindow(array)
         val viewX: Float = w / 2 + x - currentWidth / 2 + array[0]
         val viewY: Float = h / 2 + y - currentHeight / 2 + array[1]
@@ -526,8 +529,11 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
         view.y = viewY
 
 
-        Log.i(TAG, "the x=" + viewX + "the y=" + viewY)
 
+
+
+        Log.i(TAG, "the fy=" + mOriginHeight)
+        val fy = (1-mScaleY)*currentHeight
 
         val centerX = view.x + mOriginWidth / 2
         val centerY = view.y + mOriginHeight / 2
@@ -541,8 +547,8 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
         animatorSet.interpolator = LinearInterpolator()
 
 
-//        view.scaleX = mScaleX
-//        view.scaleY = mScaleY
+
+
 
         val translateXAnimator: ValueAnimator = ValueAnimator.ofFloat(view.x, view.x + translateX)
         translateXAnimator.addUpdateListener { valueAnimator ->
@@ -561,6 +567,7 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
         animatorSet.addListener(object : Animator.AnimatorListener {
             override fun onAnimationStart(animator: Animator?) {}
             override fun onAnimationEnd(animator: Animator) {
+
 
                 animator.removeAllListeners()
                 leftFinish()
