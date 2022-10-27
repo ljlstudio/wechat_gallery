@@ -137,18 +137,13 @@ public class DragPhotoView extends PhotoView {
                         onActionUp(event);
                         isTouchEvent = false;
                         //judge finish or not
-                        postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (mTranslateX == 0 && mTranslateY == 0 && canFinish) {
-
-                                    if (mTapListener != null) {
-                                        mTapListener.onTap(DragPhotoView.this);
-                                    }
-                                }
-                                canFinish = false;
+                        Log.e("mTranslateY", "mTranslateY=" + mTranslateY+"x="+mTranslateX+"finish"+canFinish);
+                        if (mTranslateX == 0 && mTranslateY == 0 && canFinish) {
+                            if (mTapListener != null) {
+                                mTapListener.onTap(DragPhotoView.this);
                             }
-                        }, 300);
+                        }
+                        canFinish = false;
                     }
             }
         }
@@ -160,8 +155,6 @@ public class DragPhotoView extends PhotoView {
 
         if (mTranslateY > MAX_TRANSLATE_Y) {
             if (mExitListener != null) {
-
-
                 mExitListener.onExit(this, mTranslateX, mTranslateY, mWidth, mHeight, mScale, px, py);
             } else {
                 throw new RuntimeException("DragPhotoView: onExitLister can't be null ! call setOnExitListener() ");
@@ -201,35 +194,35 @@ public class DragPhotoView extends PhotoView {
 
 
         invalidate();
-        if (mExitListener != null) {
+        if (mExitListener != null&&Math.abs(mTranslateY)>0) {
             mExitListener.onMove(mAlpha);
         }
 
-        px = getLeft();
-        py = getTop();
 
-
-        Log.e("XX", "moveX" + px + "top" + py);
     }
 
     public void performAnimation() {
         getScaleAnimation().start();
         getTranslateXAnimation().start();
         getTranslateYAnimation().start();
-        getAlphaAnimation().start();
+
+        if (Math.abs(mTranslateY) > 0f) {
+            getAlphaAnimation().start();
+        }
     }
 
+
     public ValueAnimator getAlphaAnimation() {
+
+
         final ValueAnimator animator = ValueAnimator.ofInt(mAlpha, 255);
         animator.setDuration(DURATION);
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                mAlpha = (int) valueAnimator.getAnimatedValue();
-                if (mExitListener != null) {
-                    mExitListener.onMove(mAlpha);
-                }
+        animator.addUpdateListener(valueAnimator -> {
+            mAlpha = (int) valueAnimator.getAnimatedValue();
+            if (mExitListener != null) {
+                mExitListener.onMove(mAlpha);
             }
+
         });
 
         return animator;
@@ -238,12 +231,7 @@ public class DragPhotoView extends PhotoView {
     private ValueAnimator getTranslateYAnimation() {
         final ValueAnimator animator = ValueAnimator.ofFloat(mTranslateY, 0);
         animator.setDuration(DURATION);
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                mTranslateY = (float) valueAnimator.getAnimatedValue();
-            }
-        });
+        animator.addUpdateListener(valueAnimator -> mTranslateY = (float) valueAnimator.getAnimatedValue());
 
         return animator;
     }
@@ -251,12 +239,7 @@ public class DragPhotoView extends PhotoView {
     private ValueAnimator getTranslateXAnimation() {
         final ValueAnimator animator = ValueAnimator.ofFloat(mTranslateX, 0);
         animator.setDuration(DURATION);
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                mTranslateX = (float) valueAnimator.getAnimatedValue();
-            }
-        });
+        animator.addUpdateListener(valueAnimator -> mTranslateX = (float) valueAnimator.getAnimatedValue());
 
         return animator;
     }
@@ -265,12 +248,9 @@ public class DragPhotoView extends PhotoView {
     private ValueAnimator getScaleAnimation() {
         final ValueAnimator animator = ValueAnimator.ofFloat(mScale, 1);
         animator.setDuration(DURATION);
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                mScale = (float) valueAnimator.getAnimatedValue();
-                invalidate();
-            }
+        animator.addUpdateListener(valueAnimator -> {
+            mScale = (float) valueAnimator.getAnimatedValue();
+            invalidate();
         });
 
         animator.addListener(new Animator.AnimatorListener() {

@@ -55,10 +55,7 @@ class PreviewStatusView : RelativeLayout {
      * 设置状态
      */
     fun setStatus() {
-        if (lastAlpha) {
-            lastAlpha = false
-            return
-        }
+
         if (binding?.top?.visibility == View.GONE) {
             binding?.top?.visibility = View.VISIBLE
             binding?.bottom?.visibility = View.VISIBLE
@@ -73,9 +70,7 @@ class PreviewStatusView : RelativeLayout {
     var lastAlpha = false
     fun setAlphaStatus(it: Float) {
 
-
         if (it == 255f) {
-            lastAlpha = true
             binding?.top?.visibility = View.VISIBLE
             binding?.bottom?.visibility = View.VISIBLE
         } else {
