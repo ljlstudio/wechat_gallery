@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity() {
             .withShouldLoadPaging(false)
             .widthPageSize(15)
             .widthCheckMode(CheckMode.MULTIPLE_MODE)
-            .widthListPicturePlaceholder(com.google.android.material.R.color.design_bottom_navigation_shadow_color)
+            .widthListPicturePlaceholder(com.kt.ktmvvm.lib.R.color.color_3C3B39)
             .widthOnGalleryListener(object : OnGalleryListener {
                 override fun clickGallery(path: String?, position: Int) {
                     Toast.makeText(

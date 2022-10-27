@@ -31,6 +31,7 @@ import com.lee.album.inter.CheckMode
 import com.lee.album.inter.LoaderDataCallBack
 import com.lee.album.router.GalleryParam
 import com.lee.album.widget.*
+import kotlin.math.abs
 
 
 class NormalGalleryViewModel(application: Application) : BaseViewModel(application),
@@ -189,21 +190,34 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
     override fun loadListDataSuccess(
         pageData: List<GalleryInfoEntity?>?,
         currentAllData: List<GalleryInfoEntity?>?
-    ) {
+    ) = pageData?.let { it1 ->
+        currentPageSize = it1.size
+        val list = pageData as MutableList<GalleryInfoEntity>
+        val loadHaveCheck = loadHaveCheck(list)
+        adapter?.get()?.addData(loadHaveCheck)
+        previewAdapter?.get()?.addData(loadHaveCheck)
+        //判断是否有选中
 
-        pageData?.let {
-            currentPageSize = it.size
-//            Log.i(TAG, "the data size=" + pageData.size)
-            adapter?.get()?.addData(pageData as MutableList<GalleryInfoEntity>)
-            previewAdapter?.get()?.addData(pageData as MutableList<GalleryInfoEntity>)
+    } ?: let {
+        currentPageSize = 0
+    }
 
-//            dataValue.postValue(pageData as MutableList<GalleryInfoEntity>)
+    /**
+     * 加载分页数据时，判断是否有选中
+     */
+    private fun loadHaveCheck(list: MutableList<GalleryInfoEntity>): MutableList<GalleryInfoEntity> {
+        val data = checkList?.get()
+        data?.let {
+            data.forEach(action = {
+                val indexOf = list.indexOf(it)
+                if (indexOf != -1) {
+                    val galleryInfoEntity = list[indexOf]
+                    galleryInfoEntity.isSelected = true
 
-
-        } ?: let {
-            currentPageSize = 0
+                }
+            })
         }
-
+        return list
     }
 
     override fun clearData() {
@@ -499,16 +513,15 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
         val currentHeight = h * scale
 
 
-        val mScaleX = mOriginWidth.toFloat() / w
-        val mScaleY = mOriginHeight.toFloat() / h
+        val mScaleX = mOriginWidth.toFloat() / currentWidth
+        val mScaleY = mOriginHeight.toFloat() / currentHeight
 
         view.getLocationInWindow(array)
         val viewX: Float = w / 2 + x - currentWidth / 2 + array[0]
         val viewY: Float = h / 2 + y - currentHeight / 2 + array[1]
 
 
-//        view.pivotX = viewX
-//        view.pivotY=viewY
+
         view.x = viewX
         view.y = viewY
 
@@ -528,14 +541,19 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
         animatorSet.interpolator = LinearInterpolator()
 
 
+//        view.scaleX = mScaleX
+//        view.scaleY = mScaleY
+
         val translateXAnimator: ValueAnimator = ValueAnimator.ofFloat(view.x, view.x + translateX)
         translateXAnimator.addUpdateListener { valueAnimator ->
             view.x = (valueAnimator.animatedValue as Float)
         }
 
-        val translateYAnimator: ValueAnimator = ValueAnimator.ofFloat(view.y, view.y + translateY)
+        val translateYAnimator: ValueAnimator =
+            ValueAnimator.ofFloat(view.y, view.y + translateY)
         translateYAnimator.addUpdateListener { valueAnimator ->
             view.y = (valueAnimator.animatedValue as Float)
+
         }
 
 
@@ -543,6 +561,7 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
         animatorSet.addListener(object : Animator.AnimatorListener {
             override fun onAnimationStart(animator: Animator?) {}
             override fun onAnimationEnd(animator: Animator) {
+
                 animator.removeAllListeners()
                 leftFinish()
             }
