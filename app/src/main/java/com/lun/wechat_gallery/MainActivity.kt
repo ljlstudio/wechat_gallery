@@ -3,6 +3,7 @@ package com.lun.wechat_gallery
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import com.lee.album.entity.GalleryInfoEntity
 import com.lee.album.inter.CheckMode
 import com.lee.album.inter.OnGalleryListener
 import com.lee.album.router.GalleryEngine
@@ -21,24 +22,12 @@ class MainActivity : AppCompatActivity() {
             .widthCheckMode(CheckMode.MULTIPLE_MODE)
             .widthListPicturePlaceholder(com.kt.ktmvvm.lib.R.color.color_3C3B39)
             .widthOnGalleryListener(object : OnGalleryListener {
-                override fun clickGallery(path: String?, position: Int) {
-                    Toast.makeText(
-                        this@MainActivity,
-                        "------->PATH=$path------->position=$position",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                override fun sendOrigenPictures(list: MutableList<String>?) {
+                    //原图
                 }
 
-                override fun bottomSheetState(isOpen: Boolean, fromUser: Boolean) {
-                    Toast.makeText(this@MainActivity, "抽屉状态$isOpen", Toast.LENGTH_SHORT).show()
-                }
-
-                override fun clickBadPicture(path: String?, position: Int) {
-                    Toast.makeText(
-                        this@MainActivity,
-                        "------->点击了 损坏图片 PATH=$path------->position=$position",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                override fun sendCompressPictures(list: MutableList<String>?) {
+                    //压缩后的图片路径
                 }
             })
             .startGallery()

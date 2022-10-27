@@ -1,5 +1,7 @@
 package com.lee.album.inter
 
+import com.lee.album.entity.GalleryInfoEntity
+
 /**
  * Author : 李嘉伦
  * e-mail : lijialun@angogo.cn
@@ -9,25 +11,9 @@ package com.lee.album.inter
  */
 interface OnGalleryListener {
     /**
-     * 点击图片
-     *
-     * @param path
-     * @param position
+     * 发送照片组
      */
-    fun clickGallery(path: String?, position: Int)
+    fun sendOrigenPictures(list: MutableList<String>?)
 
-    /**
-     * 抽屉布局状态
-     *
-     * @param isOpen
-     * @param fromUser
-     */
-    fun bottomSheetState(isOpen: Boolean, fromUser: Boolean)
-
-    /**
-     * 点击了损坏的图片
-     *
-     * @param path
-     */
-    fun clickBadPicture(path: String?, position: Int)
+    fun sendCompressPictures(list: MutableList<String>?)
 }

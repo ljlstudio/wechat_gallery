@@ -106,5 +106,5 @@ dependencies {
     //httpDns 优化
     implementation 'com.aliyun.ams:alicloud-android-httpdns:2.2.2'
 
-
+    api 'com.github.Curzibn:Luban:1.1.8'
 }

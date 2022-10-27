@@ -200,6 +200,8 @@
                 </RelativeLayout>
 
                 <TextView
+                    android:onClick="@{()->model.sendPictures()}"
+                    android:clickable="@{model.hasSelected}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
@@ -207,10 +209,10 @@
                     android:layout_marginRight="15dp"
                     android:background="@drawable/button_selected"
                     android:gravity="center"
-                    android:paddingTop="4dp"
-                    android:paddingBottom="4dp"
                     android:paddingLeft="10dp"
+                    android:paddingTop="4dp"
                     android:paddingRight="10dp"
+                    android:paddingBottom="4dp"
                     android:textColor="@color/buttom_text_color"
                     android:textSize="13sp"
                     bind:bindTvContentSend="@{model.checkSize}"

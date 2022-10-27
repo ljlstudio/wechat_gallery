@@ -6,12 +6,14 @@ import android.animation.ValueAnimator
 import android.app.Application
 import android.graphics.Rect
 import android.os.Bundle
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.ImageView
 import androidx.databinding.ObservableField
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.github.chrisbanes.photoview.OnOutsidePhotoTapListener
@@ -30,9 +32,14 @@ import com.lee.album.entity.GalleryInfoEntity
 import com.lee.album.inter.CheckMode
 import com.lee.album.inter.LoaderDataCallBack
 import com.lee.album.router.GalleryParam
-import com.lee.album.utils.Utils
 import com.lee.album.widget.*
-import kotlin.math.abs
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.launch
+import top.zibin.luban.Luban
 
 
 class NormalGalleryViewModel(application: Application) : BaseViewModel(application),
@@ -115,6 +122,9 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
      */
 
     private var checkList: ObservableField<MutableList<GalleryInfoEntity>>? =
+        ObservableField(arrayListOf())
+
+    private var checkPathList: ObservableField<MutableList<String>>? =
         ObservableField(arrayListOf())
 
 
@@ -279,10 +289,11 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
 
             if (galleryInfoEntity.isSelected) {
                 checkList?.get()?.remove(galleryInfoEntity)
+                checkPathList?.get()?.remove(galleryInfoEntity.imgPath)
             } else {
                 //判断选中模式是单选或者多选
                 if (addMaxCount()) return
-
+                checkPathList?.get()?.add(galleryInfoEntity.imgPath.toString())
                 checkList?.get()?.add(galleryInfoEntity)
             }
             checkSize?.set(checkList?.get()?.size)
@@ -418,6 +429,41 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
 
 
     /**
+     * 发送照片组
+     */
+    fun sendPictures() {
+        checkPathList?.get()?.let {
+
+            if (hasOrigen?.get() == true) {
+                //不压缩
+                galleryParam?.onGalleryListener?.sendOrigenPictures(checkPathList?.get())
+            } else {
+
+                viewModelScope.launch(Dispatchers.Main) {
+                    flow {
+                        emit(checkPathList?.get()!!)
+                    }.onStart {
+                        Log.d(TAG, "start" +( Thread.currentThread()==Looper.getMainLooper().thread))
+                    }.flowOn(Dispatchers.Main).map {
+                        Log.d(TAG, "map" + ( Thread.currentThread()==Looper.getMainLooper().thread))
+                        Luban.with(getApplication()).load(it).get()
+                    }.flowOn(Dispatchers.IO)
+                        .collect {
+                            Log.d(TAG, "collect" + ( Thread.currentThread()==Looper.getMainLooper().thread))
+                            galleryParam?.onGalleryListener?.sendCompressPictures(checkPathList?.get())
+                        }
+
+                }
+
+
+            }
+
+
+        }
+    }
+
+
+    /**
      * 左按键关闭
      */
     fun leftFinish() {
@@ -533,7 +579,7 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
 
 
         Log.i(TAG, "the fy=" + mOriginHeight)
-        val fy = (1-mScaleY)*currentHeight
+        val fy = (1 - mScaleY) * currentHeight
 
         val centerX = view.x + mOriginWidth / 2
         val centerY = view.y + mOriginHeight / 2
@@ -545,9 +591,6 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
         val animatorSet = AnimatorSet()
         animatorSet.duration = 300
         animatorSet.interpolator = LinearInterpolator()
-
-
-
 
 
         val translateXAnimator: ValueAnimator = ValueAnimator.ofFloat(view.x, view.x + translateX)
