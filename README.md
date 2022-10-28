@@ -6,5 +6,5 @@
 
 先看看效果：
 
+<img src="https://user-images.githubusercontent.com/70507884/198526195-66df678b-aa7c-4f5d-b7c3-d7718aea6487.gif" width = "300"/>
 
-![ezgif-5-d69fbcbd85](https://user-images.githubusercontent.com/70507884/198526195-66df678b-aa7c-4f5d-b7c3-d7718aea6487.gif)
