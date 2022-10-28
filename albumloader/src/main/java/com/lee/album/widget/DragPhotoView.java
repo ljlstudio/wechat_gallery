@@ -6,6 +6,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Outline;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.Rect;
@@ -13,6 +14,8 @@ import android.nfc.Tag;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewOutlineProvider;
 
 import com.github.chrisbanes.photoview.PhotoView;
 
@@ -70,13 +73,11 @@ public class DragPhotoView extends PhotoView {
 
 
         canvas.drawRect(0, 0, mWidth, mHeight, mPaint);
+
         canvas.translate(mTranslateX, mTranslateY);
         canvas.scale(mScale, mScale, mWidth / 2, mHeight / 2);
 
 
-        clipBounds = canvas.getClipBounds();
-        int width = canvas.getWidth();
-        Log.e("xxx", "w" + width);
         super.onDraw(canvas);
     }
 
@@ -86,6 +87,18 @@ public class DragPhotoView extends PhotoView {
 
         mWidth = w;
         mHeight = h;
+    }
+
+    public void setOutLine(int height, int width) {
+
+        Log.e("xxx", "height=" + height);
+        setOutlineProvider(new ViewOutlineProvider() {
+            @Override
+            public void getOutline(View view, Outline outline) {
+                outline.setRect(0, 0, width, height);
+            }
+        });
+        setClipToOutline(true);
     }
 
     @Override
@@ -137,7 +150,7 @@ public class DragPhotoView extends PhotoView {
                         onActionUp(event);
                         isTouchEvent = false;
                         //judge finish or not
-                        Log.e("mTranslateY", "mTranslateY=" + mTranslateY+"x="+mTranslateX+"finish"+canFinish);
+                        Log.e("mTranslateY", "mTranslateY=" + mTranslateY + "x=" + mTranslateX + "finish" + canFinish);
                         if (mTranslateX == 0 && mTranslateY == 0 && canFinish) {
                             if (mTapListener != null) {
                                 mTapListener.onTap(DragPhotoView.this);
@@ -194,7 +207,7 @@ public class DragPhotoView extends PhotoView {
 
 
         invalidate();
-        if (mExitListener != null&&Math.abs(mTranslateY)>0) {
+        if (mExitListener != null && Math.abs(mTranslateY) > 0) {
             mExitListener.onMove(mAlpha);
         }
 

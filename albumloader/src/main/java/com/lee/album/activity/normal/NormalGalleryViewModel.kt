@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.os.Looper
 import android.util.Log
 import android.view.View
+import android.view.animation.DecelerateInterpolator
 import android.view.animation.LinearInterpolator
 import android.widget.ImageView
 import androidx.databinding.ObservableField
@@ -476,6 +477,7 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
     }
 
     val rect = Rect()
+    var itemHeight:Int=0
 
     /**
      * 预览图滑动事件
@@ -497,6 +499,10 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
                     if (indexOf != -1 && data.size > indexOf) {
                         val viewByPosition = adapter?.get()?.getViewByPosition(indexOf, R.id.img)
                         viewByPosition?.getGlobalVisibleRect(rect)
+                        viewByPosition?.height?.let {it1->
+                            itemHeight=it1
+                        }
+
                         //设置最小缩放
                     }
                 }
@@ -556,12 +562,11 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
         val mOriginCenterX = mOriginLeft + mOriginWidth / 2
         val mOriginCenterY = mOriginTop + mOriginHeight / 2
 
+
+        Log.i(TAG, "mOriginTop=$mOriginTop")
         val currentWidth = w * scale
         val currentHeight = h * scale
 
-
-        val mScaleX = mOriginWidth.toFloat() / currentWidth
-        val mScaleY = mOriginHeight.toFloat() / currentHeight
 
 
 
@@ -575,11 +580,10 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
         view.y = viewY
 
 
+        view.setOutLine(itemHeight,mOriginWidth)
 
 
 
-        Log.i(TAG, "the fy=" + mOriginHeight)
-        val fy = (1 - mScaleY) * currentHeight
 
         val centerX = view.x + mOriginWidth / 2
         val centerY = view.y + mOriginHeight / 2
@@ -589,8 +593,8 @@ class NormalGalleryViewModel(application: Application) : BaseViewModel(applicati
 
 
         val animatorSet = AnimatorSet()
-        animatorSet.duration = 300
-        animatorSet.interpolator = LinearInterpolator()
+        animatorSet.duration = 400
+        animatorSet.interpolator = DecelerateInterpolator()
 
 
         val translateXAnimator: ValueAnimator = ValueAnimator.ofFloat(view.x, view.x + translateX)
