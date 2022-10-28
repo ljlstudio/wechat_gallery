@@ -43,6 +43,7 @@ class NormalGalleryActivity : BaseActivity<NormalGalleryActivityBinding, NormalG
         activity = this
         binding?.classifyLayout?.setDrawerLockMode(VerticalDrawerLayout.LOCK_MODE_LOCKED_CLOSED)
         binding?.classifyLayout?.setDrawerShadow(R.color.alpha_60_black, Gravity.BOTTOM)
+        binding?.layout?.setDrawerLockMode(VerticalDrawerLayout.LOCK_MODE_LOCKED_CLOSED)
     }
 
     override fun initViewObservable() {

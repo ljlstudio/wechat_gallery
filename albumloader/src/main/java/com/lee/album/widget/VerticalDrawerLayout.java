@@ -935,6 +935,9 @@ public class VerticalDrawerLayout extends ViewGroup {
     }
 
     boolean isDrawerView(View child) {
+        if (child==null){
+            return false;
+        }
         final int gravity = ((LayoutParams) child.getLayoutParams()).gravity;
         final int absGravity = GravityCompat.getAbsoluteGravity(gravity,
                 ViewCompat.getLayoutDirection(child));
@@ -983,6 +986,7 @@ public class VerticalDrawerLayout extends ViewGroup {
                 mChildrenCanceledTouch = false;
             }
         }
+
 
         return interceptForDrag || interceptForTap || hasPeekingDrawer() || mChildrenCanceledTouch;
     }
@@ -1037,8 +1041,10 @@ public class VerticalDrawerLayout extends ViewGroup {
                 break;
             }
         }
+        View openDrawer = findOpenDrawer();
 
-        return true;
+        boolean drawerOpen = isDrawerOpen(openDrawer);
+        return drawerOpen;
     }
 
     public void requestDisallowInterceptTouchEvent(boolean disallowIntercept) {
@@ -1213,6 +1219,9 @@ public class VerticalDrawerLayout extends ViewGroup {
     public boolean isDrawerOpen(View drawer) {
         if (!isDrawerView(drawer)) {
 //            throw new IllegalArgumentException("View " + drawer + " is not a drawer");
+        }
+        if (drawer==null){
+            return false;
         }
         return ((LayoutParams) drawer.getLayoutParams()).knownOpen;
     }

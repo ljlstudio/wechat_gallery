@@ -15,24 +15,24 @@
     </data>
 
     <RelativeLayout
-        android:clipChildren="false"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/color_323232">
+        android:background="@color/color_323232"
+        android:clipChildren="false">
 
 
         <View
-            android:background="@color/color_3C3B39"
             android:id="@+id/view"
             android:layout_width="match_parent"
-            android:layout_height="0dp" />
+            android:layout_height="0dp"
+            android:background="@color/color_3C3B39" />
 
         <LinearLayout
 
-            android:layout_below="@+id/view"
             android:id="@+id/title_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/view"
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
@@ -100,22 +100,24 @@
 
         </LinearLayout>
 
-
         <com.lee.album.widget.VerticalDrawerLayout
-            android:clipChildren="false"
-            android:id="@+id/classify_layout"
+            android:id="@+id/layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/bottom"
             android:layout_below="@+id/title_layout"
-            bind:bindDrawerListener="@{model.drawerListener}">
+            android:clipChildren="false">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top" />
 
             <RelativeLayout
 
-                android:clipChildren="false"
-                android:id="@+id/layout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:clipChildren="false">
 
                 <androidx.recyclerview.widget.RecyclerView
 
@@ -131,19 +133,45 @@
                     />
 
             </RelativeLayout>
-
-            <com.lee.album.widget.MaxHeightRecyclerView
-                android:id="@+id/classify_recycler"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_gravity="top"
-                android:layout_marginBottom="20dp"
-                app:maxHeightRcvHeight="560dp"
-                bind:bindRcvAdapter="@{model.titleAdapter}"
-                bind:bindRcvManager="@{model.titleManager}" />
-
         </com.lee.album.widget.VerticalDrawerLayout>
 
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/bottom"
+            android:layout_below="@+id/title_layout">
+
+
+            <com.lee.album.widget.VerticalDrawerLayout
+
+                android:id="@+id/classify_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+
+                android:clipChildren="false"
+                bind:bindDrawerListener="@{model.drawerListener}">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <com.lee.album.widget.MaxHeightRecyclerView
+
+                    android:id="@+id/classify_recycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_gravity="top"
+                    android:layout_marginBottom="20dp"
+                    android:clipChildren="true"
+                    app:maxHeightRcvHeight="560dp"
+                    bind:bindRcvAdapter="@{model.titleAdapter}"
+                    bind:bindRcvManager="@{model.titleManager}" />
+
+
+            </com.lee.album.widget.VerticalDrawerLayout>
+
+        </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/bottom"
@@ -203,15 +231,15 @@
                 </RelativeLayout>
 
                 <TextView
-                    android:onClick="@{()->model.sendPictures()}"
-                    android:clickable="@{model.hasSelected}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
                     android:background="@drawable/button_selected"
+                    android:clickable="@{model.hasSelected}"
                     android:gravity="center"
+                    android:onClick="@{()->model.sendPictures()}"
                     android:paddingLeft="10dp"
                     android:paddingTop="4dp"
                     android:paddingRight="10dp"
